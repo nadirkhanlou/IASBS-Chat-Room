@@ -105,6 +105,26 @@ class user extends person
         }
         return $usersList;
     }
+
+    private function userexist($des_username) {
+        $paramTypes = "s";
+        $Parameters = array($dest_username);
+        $result = database::ExecuteQuery('IsUsernameExist', $paramTypes, $Parameters);
+
+        if(mysqli_num_rows($result) > 0)
+              return true;
+        return false;
+    }
+
+    function send_message($destination,$message,$time) {
+        if (userexist($destination)) {
+            $paramTypes = "ssss";
+            $Parameters = array($this->username, $destination, $message, $time);
+            database::ExecuteQuery('AddMessage', $paramTypes, $Parameters);
+            return true;
+        }
+        return false;
+    }
 }
 
 ?>
