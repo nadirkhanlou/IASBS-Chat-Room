@@ -25,7 +25,6 @@ class user extends person
 {
     private $username;
     private $password;
-    private $cellphone;
 
     function getUsername() {
         return $this->username;
@@ -43,12 +42,36 @@ class user extends person
         $this->password = md5($password);
     }
 
-    function getCellphone() {
-        return $this->cellphone;
+    function checkUserPass()
+    {
+        $paramTypes = "ss";
+        $Parameters = array($this->username, $this->password);
+        $result = database::ExecuteQuery('CheckUserPass', $paramTypes, $Parameters);
+
+        if(mysqli_num_rows($result) > 0)
+        {
+            $row = $result->fetch_array();
+            $this->setName($row["name"]);
+            $this->setFamily($row["family"]);
+            return true;
+        }
+        return false;
     }
 
-    function setCellphone($cellphone) {
-        $this->cellphone = $cellphone;
+    private function getUserAsaText()
+    {
+        return $this->username.' '.$this->password.' '.$this->name.' '.$this->family.PHP_EOL;
+    }
+
+    public function IsUsernameExist()
+    {
+        $paramTypes = "s";
+        $Parameters = array($this->username);
+        $result = database::ExecuteQuery('IsUsernameExist', $paramTypes, $Parameters);
+
+        if(mysqli_num_rows($result) > 0)
+              return true;
+        return false;
     }
 }
 
