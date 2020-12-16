@@ -73,6 +73,38 @@ class user extends person
               return true;
         return false;
     }
+
+    function Save()
+    {
+        if(!$this->IsUsernameExist()) {
+            $paramTypes = "ssss";
+            $Parameters = array($this->username, $this->password,
+                $this->name, $this->family);
+            database::ExecuteQuery('AddUser', $paramTypes, $Parameters);
+            return true;
+        }
+        return false;
+    }
+
+    public function jsonSerialize(){
+        return get_object_vars($this);
+    }
+
+    public static function GetAllUsers()
+    {
+        $result = database::ExecuteQuery('GetAllUsers');
+        $usersList = array();
+        $i = 0;
+        while ($row = $result->fetch_array())
+        {
+            $tempUser = new user();
+            $tempUser->setUsername($row['username']);
+            $tempUser->setName($row['name']);
+            $tempUser->setFamily($row['family']);
+            $usersList[$i++] = $tempUser->jsonSerialize();
+        }
+        return $usersList;
+    }
 }
 
 ?>
