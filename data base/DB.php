@@ -14,6 +14,49 @@ abstract class database {
         }
         return $connection;
     }
+
+    private static function PrepareParameters($ParamTypes, $Parameters)
+    {
+        $inputArray[] = &$ParamTypes;
+        $j = count($Parameters);
+        $ParameterQuestionMarks = "";
+        for($i=0;$i<$j;$i++){
+            $inputArray[] = &$Parameters[$i];
+            $ParameterQuestionMarks.='?,';
+        }
+        return array("ParameterQuestionMarks"=>$ParameterQuestionMarks, "inputArray"=>$inputArray);
+    }
+
+    public static function ExecuteQuery($StoredProcedureName, $ParamTypes="", $Parameters=array())
+    {
+        $connection = database::ConnectToDB();
+
+        $tempParameters = database::PrepareParameters($ParamTypes, $Parameters);
+        $inputArray = $tempParameters["inputArray"];
+        $ParameterQuestionMarks = $tempParameters["ParameterQuestionMarks"];
+
+        $sql = "CALL ".$StoredProcedureName."(".substr($ParameterQuestionMarks, 0, -1).")";
+
+        if($stmt = mysqli_prepare($connection, $sql))
+        {
+            if($ParamTypes != "")
+                call_user_func_array(array($stmt, 'bind_param'), $inputArray);
+            try {
+                $stmt->execute();
+                $result = $stmt->get_result();
+                mysqli_stmt_close($stmt);
+            }
+            catch (Exception $err)
+            {
+                die($err->getMessage());
+            }
+        }
+        else
+            echo "Error!";
+
+        $connection->close();
+        return $result;
+    }
 }
 
 ?>
