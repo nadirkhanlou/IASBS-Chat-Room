@@ -105,10 +105,48 @@ class user extends person
         }
         return $usersList;
     }
+}
+class message {
+    private $from;
+    private $to;
+    private $text;
+    private $time;
 
-    private function userexist($des_username) {
+    function setfrom($from) {
+        $this->from = $from;
+    }
+    function setto($to) {
+        $this->to = $to;
+    }
+    function settext($text) {
+        $this->text = $text;
+    }
+    function settime($time) {
+        if ($time == "") {
+           $time = date("Y-m-d H:i:s");
+        }
+        $this->time = $time;
+    }
+    function getfrom() {
+        return $this->from;
+    }
+    function getto() {
+        return $this->to;
+    }
+    function gettext() {
+        return $this->text;
+    }
+    function gettime() {
+        return $this->time;
+    }
+
+    public function jsonSerialize(){
+        return get_object_vars($this);
+    }
+
+    private function userexist() {
         $paramTypes = "s";
-        $Parameters = array($dest_username);
+        $Parameters = array($this->to);
         $result = database::ExecuteQuery('IsUsernameExist', $paramTypes, $Parameters);
 
         if(mysqli_num_rows($result) > 0)
@@ -116,14 +154,34 @@ class user extends person
         return false;
     }
 
-    function send_message($destination,$message,$time) {
-        if (userexist($destination)) {
+    function send_message() {
+        if ($this->userexist()) {
+            $this->settime();
             $paramTypes = "ssss";
-            $Parameters = array($this->username, $destination, $message, $time);
+            $Parameters = array($this->from, $this->to, $this->text, $this->time);
             database::ExecuteQuery('AddMessage', $paramTypes, $Parameters);
             return true;
         }
         return false;
+    }
+
+    function see_messages() {
+        $paramTypes = "ss";
+        $Parameters = array($this->from, $this->to);
+        $messages = database::ExecuteQuery('GetMessages',$paramTypes, $Parameters);
+
+        $MessageList = array();
+        $i = 0;
+        while ($r = $messages->fetch_array())
+        {
+            $tempMes = new message();
+            $tempMes->setfrom($r['fromuser']);
+            $tempMes->setto($r['destuser']);
+            $tempMes->settext($r['message']);
+            $tempMes->settime($r['time']);
+            $MessageList[$i++] = $tempMes->jsonSerialize();
+        }
+        return $MessageList;
     }
 }
 
