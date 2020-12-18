@@ -1,5 +1,5 @@
 <?php
-
+require_once "/database/DB.php";
 abstract class person {
     public $name;
     public $sur_name;
@@ -106,6 +106,7 @@ class user extends person
         return $usersList;
     }
 }
+
 class message {
     private $from;
     private $to;
@@ -182,6 +183,14 @@ class message {
             $MessageList[$i++] = $tempMes->jsonSerialize();
         }
         return $MessageList;
+    }
+
+    function delete_messages() {
+        $paramTypes = "sss";
+        $Parameters = array($this->from, $this->to, $this->time);
+        database::ExecuteQuery('DeleteMessage',$paramTypes,$Parameters);
+        $update = $this->see_messages();
+        return $update;
     }
 }
 
