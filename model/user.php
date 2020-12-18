@@ -155,7 +155,7 @@ class message {
         return false;
     }
 
-    function send_message() {
+    function send_messages() {
         if ($this->userexist()) {
             $this->settime();
             $paramTypes = "ssss";
@@ -189,6 +189,14 @@ class message {
         $paramTypes = "sss";
         $Parameters = array($this->from, $this->to, $this->time);
         database::ExecuteQuery('DeleteMessage',$paramTypes,$Parameters);
+        $update = $this->see_messages();
+        return $update;
+    }
+
+    function edit_messages($new_text) {
+        $paramTypes = "ssss";
+        $Parameters = array($this->from, $this->to, $new_text, $this->time);
+        database::ExecuteQuery('UpdateMessage',$paramTypes,$Parameters);
         $update = $this->see_messages();
         return $update;
     }
