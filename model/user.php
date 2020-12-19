@@ -17,7 +17,7 @@ abstract class person {
     }
 
     function setFamily($family) {
-        $this->sur_name = $sur_name;
+        $this->sur_name = $family;
     }
 }
 
@@ -25,6 +25,8 @@ class user extends person
 {
     private $username;
     private $password;
+    private $telephone;
+    private $bio;
 
     function getUsername() {
         return $this->username;
@@ -40,6 +42,22 @@ class user extends person
 
     function setPassword($password) {
         $this->password = md5($password);
+    }
+
+    function getTelephne() {
+        return $this->telephone;
+    }
+
+    function setTelephone($telephone) {
+        $this->telephone = $telephone;
+    }
+
+    function getBio() {
+        return $this->bio;
+    }
+
+    function setBio($bio) {
+        $this->bio = $bio;
     }
 
     function checkUserPass()
@@ -60,7 +78,7 @@ class user extends person
 
     private function getUserAsaText()
     {
-        return $this->username.' '.$this->password.' '.$this->name.' '.$this->family.PHP_EOL;
+        return $this->username.' '.$this->password.' '.$this->name.' '.$this->sur_name.PHP_EOL;
     }
 
     public function IsUsernameExist()
@@ -77,21 +95,20 @@ class user extends person
     function Save()
     {
         if(!$this->IsUsernameExist()) {
-            $paramTypes = "ssss";
+            $paramTypes = "ssssss";
             $Parameters = array($this->username, $this->password,
-                $this->name, $this->family);
+                $this->name, $this->sur_name, $this->telephone, $this->bio);
             database::ExecuteQuery('AddUser', $paramTypes, $Parameters);
             return true;
         }
         return false;
     }
 
-    public function jsonSerialize(){
+    public function jsonSerialize() {
         return get_object_vars($this);
     }
 
-    public static function GetAllUsers()
-    {
+    public static function GetAllUsers() {
         $result = database::ExecuteQuery('GetAllUsers');
         $usersList = array();
         $i = 0;
@@ -100,10 +117,25 @@ class user extends person
             $tempUser = new user();
             $tempUser->setUsername($row['username']);
             $tempUser->setName($row['name']);
-            $tempUser->setFamily($row['family']);
+            $tempUser->setFamily($row['surname']);
             $usersList[$i++] = $tempUser->jsonSerialize();
         }
         return $usersList;
+    }
+    function Getprofile() {
+        $paramTypes = "s";
+        $Parameters = array($this->username);
+        $profile = database::ExecuteQuery('GetProfile', $paramTypes, $Parameters);
+
+        $tempUser = new user();
+        $tempUser->setUsername($profile['username']);
+        $tempUser->setName($profile['name']);
+        $tempUser->setFamily($profile['surname']);
+        $tempUser->setTelephone($profile['telephone']);
+        $tempUser->setBio($profile['bio']);
+        
+        $result = $tempUser->jsonSerialize();
+        return $result;
     }
 }
 
