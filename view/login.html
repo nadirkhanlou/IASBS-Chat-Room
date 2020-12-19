@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="../css/main.css" >
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="../js/sign_up_form.js"></script>
     </head>
     <div class="login-wrap">
         <div class="login-html">
@@ -13,11 +14,11 @@
                 <div class="sign-in-htm">
                     <div class="group">
                         <label for="user" class="label">Username</label>
-                        <input id="user" type="text" class="input">
+                        <input id="user" name="uiUser" type="text" class="input">
                     </div>
                     <div class="group">
                         <label for="pass" class="label">Password</label>
-                        <input id="pass" type="password" class="input" data-type="password">
+                        <input id="pass" name="uiPass" type="password" class="input" data-type="password">
                     </div>
                     <div class="group">
                         <input type="submit" class="button" value="Sign In">
@@ -26,35 +27,33 @@
                 <div class="sign-up-htm">
                     <div class="group">
                         <label for="Fname" class="label">First Name</label>
-                        <input id="fname" type="text" class="input">
+                        <input id="Fname" name="uiFname" type="text" class="input">
                     </div>
                     <div class="group">
                         <label for="Lname" class="label">Last Name</label>
-                        <input id="Lname" type="text" class="input">
+                        <input id="Lname" name="uiLname" type="text" class="input">
                     </div>
                     <div class="group">
                         <label for="Username" class="label">Username</label>
-                        <input id="Username" type="text" class="input">
+                        <input id="Username" name="uiUsername" type="text" class="input">
                     </div>
                     <div class="group">
                         <label for="Phone" class="label">Phone Number</label>
-                        <input id="Phone" type="text" class="input">
+                        <input id="Phone" name="uiPhone" type="text" class="input">
                     </div>
                     <div class="group">
                         <label for="pass" class="label">Password</label>
-                        <input id="pass" type="password" class="input" data-type="password">
+                        <input id="pass" name="uiPass" type="password" class="input" data-type="password">
                     </div>
                     <div class="group">
                         <label for="pass_rep" class="label">Repeat Password</label>
-                        <input id="pass_rep" type="password" class="input" data-type="password">
+                        <input id="pass_rep" name="uiPass_rep" type="password" class="input" data-type="password">
                     </div>
                     <div class="group">
-                        <input type="submit" class="button" value="Sign Up">
+                        <input type="submit" name="uiSubmit" class="button" value="Sign Up" onclick="return check()">
+                        <p id="uiMessage" style="color: rgb(82, 17, 17);"></p>
                     </div>
                     <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <label for="tab-1">Already Member?</a>
-                    </div>
                 </div>
             </div>
         </div>
