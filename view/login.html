@@ -5,59 +5,68 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="../js/sign_up_form.js"></script>
+        <script src="../js/jquery/jquery.min.js"></script>
+        <script src="../js/checkusername.js" ></script>
     </head>
+    
     <div class="login-wrap">
         <div class="login-html">
+            
             <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
             <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
             <div class="login-form">
                 <div class="sign-in-htm">
                     <div class="group">
-                        <label for="user" class="label">Username</label>
-                        <input id="user" name="uiUser" type="text" class="input">
+                        <label for="uiUser" class="label">Username</label>
+                        <input id="uiUser" name="uiUser" type="text" class="input">
                     </div>
                     <div class="group">
-                        <label for="pass" class="label">Password</label>
-                        <input id="pass" name="uiPass" type="password" class="input" data-type="password">
+                        <label for="uiPass1" class="label">Password</label>
+                        <input id="uiPass1" name="uiPass1" type="password" class="input" data-type="password">
                     </div>
                     <div class="group">
                         <input type="submit" class="button" value="Sign In">
                     </div>
                 </div>
-                <div class="sign-up-htm">
+                
+                <div class="sign-up-htm" >
+                    <form action="register.php" method="post">
                     <div class="group">
-                        <label for="Fname" class="label">First Name</label>
-                        <input id="Fname" name="uiFname" type="text" class="input">
+                        <label for="uiFname" class="label">First Name</label>
+                        <input id="uiFname" name="uiFname" type="text" class="input" value="<?php echo $uiFname_cv; ?>">
                     </div>
                     <div class="group">
-                        <label for="Lname" class="label">Last Name</label>
-                        <input id="Lname" name="uiLname" type="text" class="input">
+                        <label for="uiLname" class="label">Last Name</label>
+                        <input id="uiLname" name="uiLname" type="text" class="input" value="<?php echo $uiLName_cv; ?>">
                     </div>
                     <div class="group">
-                        <label for="Username" class="label">Username</label>
-                        <input id="Username" name="uiUsername" type="text" class="input">
+                        <label for="uiUsername" class="label">Username</label>
+                        <input id="uiUsername" onkeyup="checkusername()" name="uiUsername" type="text" class="input" value="<?php echo $uiUsername_cv; ?>">
                     </div>
                     <div class="group">
-                        <label for="Phone" class="label">Phone Number</label>
-                        <input id="Phone" name="uiPhone" type="text" class="input">
+                        <label for="uiPhone" class="label">Phone Number</label>
+                        <input id="uiPhone" name="uiPhone" type="text" class="input" value="<?php echo $uiPhone_cv; ?>">
                     </div>
                     <div class="group">
-                        <label for="pass" class="label">Password</label>
-                        <input id="pass" name="uiPass" type="password" class="input" data-type="password">
+                        <label for="uiPas" class="label">Password</label>
+                        <input id="uiPas" name="uiPass" type="password" class="input" data-type="password">
                     </div>
                     <div class="group">
-                        <label for="pass_rep" class="label">Repeat Password</label>
-                        <input id="pass_rep" name="uiPass_rep" type="password" class="input" data-type="password">
+                        <label for="uiPass_rep" class="label">Repeat Password</label>
+                        <input id="uiPass_rep" name="uiPass_rep" type="password" class="input" data-type="password">
                     </div>
                     <div class="group">
                         <input type="submit" name="uiSubmit" class="button" value="Sign Up" onclick="return check()">
                         <p id="uiMessage" style="color: rgb(82, 17, 17);"></p>
                     </div>
                     <div class="hr"></div>
+                    <span><?php echo $Message; ?></span>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+    
 
 
 </html>

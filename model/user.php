@@ -1,5 +1,5 @@
 <?php
-require_once "/database/DB.php";
+require_once "../database/DB.php";
 abstract class person {
     public $name;
     public $sur_name;
@@ -44,7 +44,7 @@ class user extends person
         $this->password = md5($password);
     }
 
-    function getTelephne() {
+    function getTelephone() {
         return $this->telephone;
     }
 
