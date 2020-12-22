@@ -21,7 +21,7 @@ if(isset($_POST['uiSubmit']))
         $u->setName($_POST['uiFname']);
         $u->setFamily($_POST['uiLname']);
         $u->setUsername($_POST['uiUsername']);
-        $u->setPassword($_POST['uiPassword']);
+        $u->setPassword($_POST['uiPass']);
         $u->setTelephone($_POST['uiPhone']);
         if($u->Save())
             $Message = 'You have successfully registed.';
@@ -47,12 +47,12 @@ function validation()
         $Message .= 'Enter your family'."<br/>";
     if($_POST["uiUsername"] == "")
         $Message .= 'Enter your username.'."<br/>";
-    if($_POST["uiPassword"] == "")
+    if($_POST["uiPass"] == "")
         $Message .= 'Enter your password'."<br/>";
     if($_POST["uiPhone"] == "")
         $Message .= 'Enter your Phone number'."<br/>";
 
-    if($_POST["uiPassword"] != $_POST["uiConfirmPassword"])
+    if($_POST["uiPass"] != $_POST["uiPass_rep"])
         $Message .= 'Password and confirmation password do not match.'."<br/>";
 
 
