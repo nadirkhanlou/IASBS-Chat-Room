@@ -1,5 +1,5 @@
 <?php
-require_once "../database/DB.php";
+require_once "database/DB.php";
 abstract class person {
     public $name;
     public $sur_name;

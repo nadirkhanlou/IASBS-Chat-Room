@@ -1,6 +1,6 @@
 <?php
-require "config.php";
-require "../model/user.php";
+require "config/config.php";
+require "model/user.php";
 
 $Message = '';
 $uiFname_cv = "";
@@ -31,7 +31,7 @@ if(isset($_POST['uiSubmit']))
     else
         $Message = $validationMessage;
 }
-include "../view/login.html";
+include "view/login.html";
 
 
 
