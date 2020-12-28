@@ -50,6 +50,11 @@ div {
     height: 95%;
 }
 
+.user-settings-wrapper {
+    border: 2px solid yellow;
+    height: 93%;
+}
+
 .chat-window-wrapper {
     border: 2px solid orange;
     height: 100%;
