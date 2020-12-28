@@ -66,3 +66,12 @@ function CheckPassword(elem) {
         elem.style = "border: solid red;";
     }
 }
+
+function CreateAccount() {
+    successful = true;
+    if (successful) {
+        $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+    } else {
+        console.log("Registration failed.");
+    }
+}
