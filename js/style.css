@@ -1,0 +1,73 @@
+div {
+    margin: 0px;
+}
+
+.header {
+    border: 1px solid black;
+    height: 5%;
+}
+
+.content-wrapper {
+    border: 1px solid black;
+    height: 90%;
+    display: flex;
+}
+
+.footer {
+    border: 1px solid black;
+    height: 5%;
+}
+
+.left-side-wrapper {
+    border: 2px solid purple;
+    height: 100%;
+    width: 20%;
+}
+
+.right-side-wrapper {
+    border: 2px solid cyan;
+    height: 100%;
+    width: 80%;
+}
+
+.user-overview {
+    border: 2px solid black;
+    height: 7%;
+}
+
+.user-contacts-wrapper {
+    border: 2px solid green;
+    height: 93%;
+}
+
+.user-contacts-search-bar {
+    border: 1px solid grey;
+    height: 5%;
+}
+
+.user-contacts-list {
+    border: 1px solid grey;
+    height: 95%;
+}
+
+.chat-window-wrapper {
+    border: 2px solid orange;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-window-header {
+    border: 1px solid black;
+    height: 7%;
+}
+
+.chat-window-body {
+    border: 1px solid black;
+    height: 88%;
+}
+
+.chat-window-input {
+    border: 1px solid black;
+    height: 5%;
+}
