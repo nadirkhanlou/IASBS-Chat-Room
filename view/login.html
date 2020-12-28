@@ -1,0 +1,18 @@
+<div class="login-content-wrapper">
+    <div class="form">
+        <form class="register-form">
+            <input type="text" id="full-name" onblur="ValidateNameInput(this)" placeholder="full name"/>
+            <input type="text" id="handle" onkeydown="CheckHandleAvailability(this)" placeholder="@handle"/>
+            <input type="text" id="phone-number" placeholder="phone number"/>
+            <input type="password" id="password" onblur="CheckPassword(this)" placeholder="password"/>
+            <button>create</button>
+            <p class="message">Already registered? <a href="#">Sign In</a></p>
+        </form>
+        <form class="login-form">
+            <input type="text" id="login-handle" placeholder="@handle"/>
+            <input type="password" id="login-password" placeholder="password"/>
+            <button>login</button>
+            <p class="message">Not registered? <a href="#">Create an account</a></p>
+        </form>
+    </div>
+</div>
