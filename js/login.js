@@ -1,4 +1,5 @@
-window.onload = function () {
+$(function () {
+    console.log("Hello from login.js");
     $('.message a').click(function(){
         $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
     });
@@ -27,7 +28,7 @@ window.onload = function () {
         placeholder: "",
         casing: "lower",
     });
-}
+});
 
 function ValidateNameInput(elem) {
     let inputText = elem.value;
