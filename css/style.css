@@ -50,11 +50,6 @@ div {
     height: 95%;
 }
 
-.user-settings-wrapper {
-    border: 2px solid yellow;
-    height: 93%;
-}
-
 .chat-window-wrapper {
     border: 2px solid orange;
     height: 100%;
@@ -76,3 +71,47 @@ div {
     border: 1px solid black;
     height: 5%;
 }
+
+.user-settings-wrapper {
+    border: 2px solid yellow;
+    height: 93%;
+}
+
+.user-settings-form input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 80%;
+    border: 0;
+    margin: 5px 15px 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.user-settings-form label {
+    font-family: "Roboto", sans-serif;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.user-settings-form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 80%;
+    border: 0;
+    margin: 0 15px 15px;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+  }
+
+  .user-settings-form button:hover,.form button:active,.form button:focus {
+    background: #43A047;
+  }

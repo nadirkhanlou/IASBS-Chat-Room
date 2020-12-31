@@ -14,9 +14,20 @@
         </div>
     </div>
     <div class="user-settings-wrapper">
-        <li>Option#1</li>
-        <li>Option#2</li>
-        <li>Option#3</li>
+        <form class="user-settings-form">
+            <br/><label>full name</label><br/>
+            <input type="text" id="full-name" onblur="ValidateNameInput(this)" placeholder="full name" value="<?php echo 'full name' ?>"/>
+            <br/><label>handle</label><br/>
+            <input type="text" id="handle" onkeyup="CheckHandleAvailability(this)" placeholder="@handle" value="<?php echo 'handle' ?>"/>
+            <br/><label>phone number</label><br/>
+            <input type="text" id="phone-number" value="<?php echo '99999999999' ?>" disabled/>
+            <br/><label>current password</label><br/>
+            <input type="password" id="current-password" placeholder="current password"/>
+            <br/><label>new password</label><br/>
+            <input type="password" id="new-password" onblur="CheckPassword(this)" placeholder="new password"/>
+            <br/>
+            <button>save</button>
+        </form>
     </div>
 </div>
 <div class="right-side-wrapper">
