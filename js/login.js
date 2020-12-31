@@ -1,4 +1,4 @@
-window.onload = function () {
+$(function () {
     $('.message a').click(function(){
         $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
     });
@@ -27,7 +27,7 @@ window.onload = function () {
         placeholder: "",
         casing: "lower",
     });
-}
+});
 
 function ValidateNameInput(elem) {
     let inputText = elem.value;
@@ -54,6 +54,10 @@ function CheckPassword(elem) {
     let inputText = elem.value;
 
     regex = /[a-zA-Z0-9\=\*\$\#\!\+\-]{8,24}/;
+
+    if (inputText.length == 0) {
+        return;
+    }
     if (inputText.length < 8) {
         elem.style = "border: solid red;";
     } else if (inputText.length < 25) {

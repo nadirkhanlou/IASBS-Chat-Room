@@ -2,7 +2,7 @@
     <div class="form">
         <form class="register-form">
             <input type="text" id="full-name" onblur="ValidateNameInput(this)" placeholder="full name"/>
-            <input type="text" id="handle" onkeydown="CheckHandleAvailability(this)" placeholder="@handle"/>
+            <input type="text" id="handle" onkeyup="CheckHandleAvailability(this)" placeholder="@handle"/>
             <input type="text" id="phone-number" placeholder="phone number"/>
             <input type="password" id="password" onblur="CheckPassword(this)" placeholder="password"/>
             <button onclick="CreateAccount()">create</button>
