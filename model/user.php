@@ -1,4 +1,5 @@
 <?php
+require_once "model/message.php";
 
 class user
 {
@@ -74,7 +75,8 @@ class user
 	
 	function SendMessage($receiverHandle, $messageText)
 	{
-		
+		msg = new message($this->handle, $receiverHandle, $messageText);
+		return msg.SendMessage();
 	}
 }
 
