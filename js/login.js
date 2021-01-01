@@ -42,12 +42,28 @@ function ValidateNameInput(elem) {
 
 function CheckHandleAvailability(elem) {
     let inputText = elem.value;
-    isAvailable = true;
-    if (!isAvailable) {
-        elem.style = "border: solid red;";
-    } else {
-        elem.style = "border: solid green;";
-    }
+
+    $.ajax({
+        url: 'services/handleCheck.php',
+        type: 'POST',
+        async: !1,
+        data: {handle: inputText},
+        success: function (result) {
+            if(result["success"])
+            {
+                elem.style = "border: solid green;";
+            }
+            else
+            {
+                elem.style = "border: solid red;";
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
 }
 
 function CheckPassword(elem) {
