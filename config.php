@@ -1,8 +1,8 @@
 <?php
-$server = 'localhost';
+$server = 'localhost:3306';
 $db_username = 'root';
-$db_password = '123456';
-$db_name = 'whosapp';
+$db_password = 'admin';
+$db_name = 'messager';
 
 $ViewPath = 'view/';
 $SharedFolderPath = 'view/shared/';
