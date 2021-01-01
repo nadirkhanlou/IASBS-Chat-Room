@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "model/user.php";
 
 if(isset($_POST['handle']))
@@ -13,10 +14,12 @@ if(isset($_POST['handle']))
     }
     else
     {
-        $result["user"] = $user;
+        $accessibleUser = new accessibleUser($user);
+        $_SESSION["USER"] = serialize($accessibleUser);
+        $result["user"] = $accessibleUser;
     }
 
-    echo $result;
+    echo serialize($result);
 }
 
 ?>

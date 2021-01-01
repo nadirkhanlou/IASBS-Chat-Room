@@ -1,18 +1,21 @@
 <?php
+session_start();
 require_once "model/user.php";
 
 if(isset($_POST['handle']))
 {
     $result = array("success" => true, "errorMessage" => "");
-    
-    //should check cookie if handle is logged in before 
-    if(user::IsHandleExist($_POST['handle']))
+
+    if(!(isset($_SESSION["USER"]) && unserialize($_SESSION["USER"])['handle'] == $_POST['handle']))
     {
-        $result["success"] = false;
-        $result["errorMessage"] = "The Handle already exists.";
+        if(user::IsHandleExist($_POST['handle']))
+        {
+            $result["success"] = false;
+            $result["errorMessage"] = "The Handle already exists.";
+        }
     }
 
-    echo $result;
+    echo serialize($result);
 }
 
 ?>

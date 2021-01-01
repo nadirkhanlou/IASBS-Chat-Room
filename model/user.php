@@ -2,11 +2,22 @@
 require_once "model/message.php";
 require_once "database.php";
 
-class user
+class accessibleUser
 {
 	private $fullName;
 	private $handle;
 	private $phoneNumber;
+
+	function __construct($user)
+	{
+		$this->fullName = $user->fullName;
+		$this->handle = $user->handle;
+		$this->phoneNumber = $user->phoneNumber;
+	}
+}
+
+class user extends accessibleUser
+{
 	private $password;
 	
 	/*
@@ -108,6 +119,11 @@ class user
 	{
 		$msg = new message($this->handle, $receiverHandle, $messageText);
 		return $msg.SendMessage();
+	}
+
+	function Serialize()
+	{
+		
 	}
 }
 

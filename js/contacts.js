@@ -6,7 +6,8 @@ function GetContacts() {
         type: 'POST',
         async: !1,
         data: {'contacts': 1},
-        success: function (result) {
+        success: function (resultString) {
+            result = JSON.parse(resultString);
             if(result["success"])
             {
                 contacts = result["users"]["contacts"];

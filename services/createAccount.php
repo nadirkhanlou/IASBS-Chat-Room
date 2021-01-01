@@ -21,7 +21,7 @@ if(isset($_POST['handle']))
         $user.StoreInDatebase();
     }
 
-    echo $result;
+    echo serialize($result);
 }
 
 ?>

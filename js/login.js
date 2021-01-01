@@ -48,7 +48,8 @@ function CheckHandleAvailability(elem) {
         type: 'POST',
         async: !1,
         data: {handle: inputText},
-        success: function (result) {
+        success: function (resultString) {
+            result = JSON.parse(resultString);
             if(result["success"])
             {
                 elem.style = "border: solid green;";
@@ -97,7 +98,8 @@ function CreateAccount() {
         type: 'POST',
         async: !1,
         data: { fullName: fullName, handle: handle, phoneNumber: phoneNumber, password: password},
-        success: function (result) {
+        success: function (resultString) {
+            result = JSON.parse(resultString);
             if(result["success"])
             {
                 $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
@@ -122,7 +124,8 @@ function Login() {
         type: 'POST',
         async: !1,
         data: {handle: handle, password: password},
-        success: function (result) {
+        success: function (resultString) {
+            result = JSON.parse(resultString);
             if(result["success"])
             {
                 user = result["user"];
