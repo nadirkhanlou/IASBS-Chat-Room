@@ -1,5 +1,6 @@
 <?php
 require_once "model/user.php";
+require_once "database.php";
 
 class message
 {
@@ -18,10 +19,12 @@ class message
 	
 	function SendMessage()
 	{
-		if(user.IsUsernameExist())
+		if(user::IsHandleExist($this->receiverHandle))
 		{
 			
 			//store in database
+			$query = "";
+			$result = database::ExecuteQuery($query);
 			
 			return true;
 		}

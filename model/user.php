@@ -1,5 +1,6 @@
 <?php
 require_once "model/message.php";
+require_once "database.php";
 
 class user
 {
@@ -18,7 +19,7 @@ class user
 		$this->fullName = $fullName;
 		$this->handle = $handle;
 		$this->phoneNumber = $phoneNumber;
-		$this->password = isPasswordHashed ? $password : HashPassword();
+		$this->password = isPasswordHashed ? $password : user::HashPassword();
 	}
 	
 	
@@ -51,26 +52,46 @@ class user
         return md5($password);
     }
 	
-	static function IsUsernameExist()
+	static function IsHandleExist($handle)
 	{
-		
+		$query = "";
+		$result = database::ExecuteQuery($query);
+        return mysqli_num_rows($result) > 0;
+	}
+	
+	static function IsPhoneNumberExist($phoneNumber)
+	{
+		$query = "";
+		$result = database::ExecuteQuery($query);
+        return mysqli_num_rows($result) > 0;
 	}
 	
 	//Other methods
 	
 	function StoreInDatebase()
 	{
-		
+		$query = "";
+		$result = database::ExecuteQuery($query);
 	}
 	
 	function CheckPassword()
 	{
-		
+		$query = "";
+		$result = database::ExecuteQuery($query);
+        if(mysqli_num_rows($result)){
+			$row = $result->fetch_array();
+            $this->fullName = $row["fullName"];
+            $this->handle = $row["handle"];
+            $this->phoneNumber = $row["phoneNumber"];
+            return true;
+		}
+		return false;
 	}
 	
 	function GetMessages()
 	{
-		
+		$query = "";
+		$result = database::ExecuteQuery($query);
 	}
 	
 	function SendMessage($receiverHandle, $messageText)
