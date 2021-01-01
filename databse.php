@@ -1,6 +1,6 @@
 <?php
 
-static class database
+class database
 {
     private static function ConnectToDB()
     {
@@ -10,7 +10,7 @@ static class database
         global $db_name;
 
         $connection = mysqli_connect($server, $db_username, $db_password, $db_name);
-        if ($connection->connect_error)
+        if ($connectionconnect_error)
         {
             die("Connection failed: " . $connection->connect_error);
         }

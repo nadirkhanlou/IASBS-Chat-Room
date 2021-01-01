@@ -19,7 +19,7 @@ class user
 		$this->fullName = $fullName;
 		$this->handle = $handle;
 		$this->phoneNumber = $phoneNumber;
-		$this->password = isPasswordHashed ? $password : user::HashPassword();
+		$this->password = isPasswordHashed ? $password : user::HashPassword($password);
 	}
 	
 	
@@ -88,6 +88,16 @@ class user
 		return false;
 	}
 	
+	function GetContacts()
+	{
+
+	}
+
+	function GetBlockedList()
+	{
+		
+	}
+
 	function GetMessages()
 	{
 		$query = "";
@@ -96,9 +106,9 @@ class user
 	
 	function SendMessage($receiverHandle, $messageText)
 	{
-		msg = new message($this->handle, $receiverHandle, $messageText);
-		return msg.SendMessage();
+		$msg = new message($this->handle, $receiverHandle, $messageText);
+		return $msg.SendMessage();
 	}
 }
 
->
+?>

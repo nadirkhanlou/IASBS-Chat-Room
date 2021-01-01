@@ -33,8 +33,8 @@ class message
 	
 	function IsDelivered()
 	{
-		return !is_null($dataTime)
+		return !is_null($dataTime);
 	}
 }
 
->
+?>
