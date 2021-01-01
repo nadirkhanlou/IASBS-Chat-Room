@@ -72,10 +72,28 @@ function CheckPassword(elem) {
 }
 
 function CreateAccount() {
-    successful = true;
-    if (successful) {
-        $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-    } else {
-        console.log("Registration failed.");
-    }
+    fullName = document.getElementById("full-name").value;
+    handle = document.getElementById("handle").value;
+    phoneNumber = document.getElementById("phone-number").value;
+    password = document.getElementById("password").value;
+    $.ajax({
+        url: 'services/createAccount.php',
+        type: 'POST',
+        async: !1,
+        data: { fullName: fullName, handle: handle, phoneNumber: phoneNumber, password: password},
+        success: function (result) {
+            if(result["success"])
+            {
+                $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
 }
