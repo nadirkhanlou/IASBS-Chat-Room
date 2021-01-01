@@ -97,3 +97,28 @@ function CreateAccount() {
         }
     });
 }
+
+function Login() {
+    handle = document.getElementById("login-handle").value;
+    password = document.getElementById("login-password").value;
+    $.ajax({
+        url: 'services/login.php',
+        type: 'POST',
+        async: !1,
+        data: {handle: handle, password: password},
+        success: function (result) {
+            if(result["success"])
+            {
+                user = result["user"];
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
+}

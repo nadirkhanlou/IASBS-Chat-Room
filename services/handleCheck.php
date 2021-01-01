@@ -4,7 +4,8 @@ require_once "model/user.php";
 if(isset($_POST['handle']))
 {
     $result = array("success" => true, "errorMessage" => "");
-
+    
+    //should check cookie if handle is logged in before 
     if(user::IsHandleExist($_POST['handle']))
     {
         $result["success"] = false;
