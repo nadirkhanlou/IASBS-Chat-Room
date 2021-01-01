@@ -28,41 +28,19 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `phone` VARCHAR(16) NOT NULL,
-  `email` VARCHAR(255) NOT NULL DEFAULT 'example@sth.com',
+  `handle` VARCHAR(255) NOT NULL,
   `password` NVARCHAR(24) NOT NULL,
   `full_name` NVARCHAR(150) NOT NULL DEFAULT '',
   `is_active` TINYINT(1) NOT NULL DEFAULT 0,
   `is_reported` TINYINT(1) NOT NULL DEFAULT 0,
   `is_blocked` TINYINT(1) NOT NULL DEFAULT 0,
-  `preferences` TEXT NOT NULL DEFAULT '',
+  `preferences` TEXT NOT NULL,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE (phone),
-  UNIQUE (email))
+  UNIQUE (handle))
 ENGINE = InnoDB;
-
-SHOW WARNINGS;
-
--- -----------------------------------------------------
--- Table `contacts`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `contacts` ;
-
-SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `contacts` (
-  `id` INT NOT NULL COMMENT 'Sync the contacts to this table',
-  `userc_id` INT NOT NULL,
-  `contact_id` INT NOT NULL,
-  `created_at` VARCHAR(45) NOT NULL,
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`usersc_id`)
-    REFERENCES `users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `conversation`
@@ -260,3 +238,15 @@ SHOW WARNINGS;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+CREATE PROCEDURE ADD_USER
+	(IN PHONE INT,
+    IN HANDLE NVARCHAR(255),
+	IN PASSWORD NVARCHAR(24),
+    IN FULL_NAME NVARCHAR(150),
+    IN CREATED_AT DATETIME,
+    IN UPDATED_AT DATETIME)
+BEGIN
+INSERT INTO users (phone,handle,[password],full_name,created_at,updated_at) 
+VALUES (PHONE,HANDLE,[PASSWORD],FULL_NAME,CREATED_AT,UPDATED_AT)
+END
