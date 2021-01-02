@@ -11,7 +11,7 @@ if(isset($_SESSION['USER']))
 }
 else
 {
-//    include $ViewPath."login.html";
+    include $ViewPath."login.html";
 }
 
 include $SharedFolderPath."footer.html";
