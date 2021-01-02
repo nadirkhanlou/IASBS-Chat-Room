@@ -1,6 +1,6 @@
 <?php
-require_once "user.php";
-require_once "../database.php";
+require_once dirname(__FILE__)."/../database.php";
+require_once dirname(__FILE__)."/user.php";
 
 class message
 {

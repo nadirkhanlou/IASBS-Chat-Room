@@ -1,6 +1,6 @@
 <?php
-require_once "message.php";
-require_once "../database.php";
+require_once dirname(__FILE__)."/../database.php";
+require_once dirname(__FILE__)."/message.php";
 
 class accessibleUser
 {
