@@ -29,8 +29,8 @@ DROP TABLE IF EXISTS `users` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `users` (
-                                       `id` INT NOT NULL AUTO_INCREMENT,
-                                       `phone` NCHAR(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `phone` NCHAR(11) NOT NULL,
     `handle` VARCHAR(255) NOT NULL,
     `password` NVARCHAR(255) NOT NULL,
     `full_name` NVARCHAR(150) NOT NULL DEFAULT '',
@@ -53,8 +53,8 @@ DROP TABLE IF EXISTS `messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `messages` (
-                                          `id` INT NOT NULL,
-                                          `guid` VARCHAR(100) NOT NULL DEFAULT '',
+    `id` INT NOT NULL,
+    `guid` VARCHAR(100) NOT NULL DEFAULT '',
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
@@ -83,10 +83,10 @@ DROP TABLE IF EXISTS `reports` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `reports` (
-                                         `id` INT NOT NULL AUTO_INCREMENT,
-                                         `users_id` INT NOT NULL,
-                                         `participants_id` INT NOT NULL,
-                                         `report_type` VARCHAR(45) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `users_id` INT NOT NULL,
+    `participants_id` INT NOT NULL,
+    `report_type` VARCHAR(45) NOT NULL,
     `notes` TEXT NOT NULL,
     `status` ENUM('pending', 'resolved') NOT NULL DEFAULT 'pending',
     `created_at` DATETIME NOT NULL,
@@ -107,11 +107,11 @@ DROP TABLE IF EXISTS `block_list` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `block_list` (
-                                            `id` INT NOT NULL AUTO_INCREMENT,
-                                            `users_id` INT NOT NULL,
-                                            `participants_id` INT NOT NULL,
-                                            `created_at` DATETIME NOT NULL,
-                                            PRIMARY KEY (`id`),
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `users_id` INT NOT NULL,
+    `participants_id` INT NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
     CONSTRAINT `fk_blocks_users1`
     FOREIGN KEY (`users_id`)
     REFERENCES `users` (`id`)
@@ -128,12 +128,12 @@ DROP TABLE IF EXISTS `deleted_messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `deleted_messages` (
-                                                  `id` INT NOT NULL AUTO_INCREMENT,
-                                                  `messages_id` INT NOT NULL,
-                                                  `users_id` INT NOT NULL,
-                                                  `created_at` DATETIME NOT NULL,
-                                                  `updated_at` DATETIME NOT NULL,
-                                                  PRIMARY KEY (`id`),
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `messages_id` INT NOT NULL,
+    `users_id` INT NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
     CONSTRAINT `fk_deleted_messages_messages1`
     FOREIGN KEY (`messages_id`)
     REFERENCES `messages` (`id`)
@@ -155,8 +155,8 @@ DROP TABLE IF EXISTS `activities` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `activities` (
-                                            `id` INT NOT NULL,
-                                            `activity_type` VARCHAR(45) NOT NULL,
+    `id` INT NOT NULL,
+    `activity_type` VARCHAR(45) NOT NULL,
     `activity_id` INT NOT NULL,
     `title` VARCHAR(45) NOT NULL,
     `detail` TEXT NOT NULL,
@@ -174,9 +174,9 @@ DROP TABLE IF EXISTS `attachments` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `attachments` (
-                                             `id` INT NOT NULL,
-                                             `messages_id` INT NOT NULL,
-                                             `thumb_url` VARCHAR(45) NOT NULL,
+    `id` INT NOT NULL,
+    `messages_id` INT NOT NULL,
+    `thumb_url` VARCHAR(45) NOT NULL,
     `file_url` VARCHAR(45) NOT NULL,
     `created_at` TIMESTAMP NOT NULL,
     `updated_at` DATETIME NULL,
