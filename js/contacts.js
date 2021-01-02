@@ -19,11 +19,11 @@ function GetContacts() {
                 let contactsListInner = "";
                 for(let i = 0; i < contacts.length; ++i)
                 {
-                    contactsListInner += `<li><a href="#">${contacts[i]['FullName']}</a></li>\n`;
+                    contactsListInner += `<li><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
                 }
                 for(let i = 0; i < blocked.length; ++i)
                 {
-                    contactsListInner += `<li><a class="contact-blocked" href="#">${blocked[i]['FullName']}</a></li>\n`;
+                    contactsListInner += `<li class="contact-blocked"><span>${blocked[i]['Handle']}</span><span>${blocked[i]['FullName']}</span></li>\n`;
                 }
                 contactsList.innerHTML = contactsListInner;
 

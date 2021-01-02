@@ -53,18 +53,27 @@ div {
     overflow-x: hide;
     overflow-y: auto;
 }
-.user-contacts-list li a {
+.user-contacts-list li {
     display: block;
     color: #FFFFFF;
     padding: 8px 16px;
     text-decoration: none;
     border-bottom: 1px solid black;
 }
-.user-contacts-list li a:hover {
+.user-contacts-list li:hover {
     background-color: #555;
-    color: #FFFFFF
+    cursor: pointer;
+    color: #FFFFFF;
 }
-.user-contacts-list .contact-blocked {
+.user-contacts-list li span:first-of-type {
+    font-size: 1.3em;
+}
+.user-contacts-list li span:last-of-type {
+    font-size: 1em;
+    color: #b0b0b0;
+    margin-left: 10px;
+}
+.user-contacts-list li.contact-blocked {
     text-decoration: line-through;
 }
 .chat-window-wrapper {
