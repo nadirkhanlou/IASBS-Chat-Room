@@ -90,13 +90,13 @@ class user extends accessibleUser
 	
 	function CheckPassword()
 	{
-		$query = "";
+		$query = "CALL CHECK_PASSWORD('{$this->handle}', '{$this->password}')";
 		$result = database::ExecuteQuery($query);
-        if(mysqli_num_rows($result)){
+        if(mysqli_num_rows($result) > 0){
 			$row = $result->fetch_array();
-            $this->fullName = $row["fullName"];
+            $this->fullName = $row["full_name"];
             $this->handle = $row["handle"];
-            $this->phoneNumber = $row["phoneNumber"];
+            $this->phoneNumber = $row["phone"];
             return true;
 		}
 		return false;

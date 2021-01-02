@@ -249,3 +249,13 @@ BEGIN
 	INSERT INTO users (phone, handle, `password`, full_name, created_at, updated_at) 
 	VALUES (PHONE, HANDLE, `PASSWORD`, FULL_NAME, NOW(), NOW());
 END$$
+
+DELIMITER $$
+CREATE PROCEDURE CHECK_PASSWORD
+	(
+    IN HANDLE NVARCHAR(255),
+	IN `PASSWORD` NVARCHAR(255))
+BEGIN
+	SELECT * FROM users WHERE 
+	HANDLE = users.handle && `PASSWORD` = users.`password`;
+END$$

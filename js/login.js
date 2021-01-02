@@ -118,8 +118,8 @@ function CreateAccount() {
 }
 
 function Login() {
-    handle = document.getElementById("login-handle").value;
-    password = document.getElementById("login-password").value;
+    let handle = document.getElementById("login-handle").value;
+    let password = document.getElementById("login-password").value;
     $.ajax({
         url: 'services/login.php',
         type: 'POST',

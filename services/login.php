@@ -2,12 +2,12 @@
 session_start();
 require_once "../model/user.php";
 
-if(isset($_SESSION['handle']))
+if(isset($_REQUEST['handle']))
 {
     $result = array("success" => true, "errorMessage" => "", "user" => "");
 
-    $user = new user(null, $_SESSION['handle'], null, $_SESSION['password']);
-    if(!$user.CheckPassword())
+    $user = new user(null, $_REQUEST['handle'], null, $_REQUEST['password'], false);
+    if(!$user->CheckPassword())
     {
         $result["success"] = false;
         $result["errorMessage"] = "The handle or password is incorrect.";
