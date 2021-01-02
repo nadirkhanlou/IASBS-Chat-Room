@@ -3,10 +3,12 @@ session_start();
 
 if(isset($_REQUEST['logout']))
 {
-    $result = array("success" => true, "errorMessage" => "", "users" => "");
+    $result = array("success" => true, "errorMessage" => "");
 
     if(isset($_SESSION['USER']))
+    {
         unset($_SESSION['USER']);
+    }
     else
     {
         $result['success'] = false;
