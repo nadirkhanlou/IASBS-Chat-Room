@@ -288,10 +288,19 @@ CALL EDITPROFILE('WWW','WWW','WWW','WWW','WWW');
 ----------------------------------------------------------------------------------------
 
 DELIMITER $$
-CREATE PROCEDURE BLOCKUSER(IN USER1 VARCHAR(300), IN USER2 VARCHAR(300))
+CREATE PROCEDURE BLOCK_USER
+	(
+    IN HANDLE NCHAR(11),
+    IN TO_BE_BLOCKED_HANDLE NCHAR(11))
 BEGIN
-INSERT INTO block_list (user_id, participants_id, created_at) VALUES(USER1, USER2, NOW());
-END $$
+	SET @users_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+	SET @participants_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+    IF EXISTS(SELECT * FROM block_list WHERE @users_id = users_id && @participants_id = participants_id)
+    THEN
+	INSERT INTO block_list (users_id, participants_id, created_at) 
+	VALUES (@users_id, @participants_id, NOW());
+    END IF;
+END$$
 
 DELIMITER ;
 
