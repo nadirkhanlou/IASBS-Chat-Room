@@ -1,18 +1,19 @@
 <div class="left-side-wrapper">
     <div class="user-overview">
-        <?php echo $WelcomeMessage; ?>
-        <button id="user-overview-settings-button">settings</button>
-        <button id="user-overview-logout-button" onclick="LogoutFunc(); return false;">log out</button>
+        <div class="user-info" style="float: left">
+            <p class="user-handle"><?php echo '@handle'; ?></p>
+            <p class="user-full-name"><?php echo 'full name'; ?></p>
+        </div>
+        <div class="buttons" style="float: right">
+            <i class="fas fa-sign-out-alt fa-2x" id="user-overview-logout-button" style="float: right"></i>
+            <i class="fas fa-edit fa-2x" id="user-overview-settings-button" style="float: right"></i>
+        </div>
     </div>
     <div class="user-contacts-wrapper">
         <div class="user-contacts-search-bar">
-            Search bar appears here
+            <input type="text" placeholder="Search..">
         </div>
-        <div class="user-contacts-list">
-            <li><a href="#">Contact#1</a></li>
-            <li><a href="#">Contact#2</a></li>
-            <li><a href="#">Contact#3</a></li>
-        </div>
+        <div class="user-contacts-list"></div>
     </div>
     <div class="user-settings-wrapper">
         <form class="user-settings-form">
@@ -34,10 +35,14 @@
 <div class="right-side-wrapper">
     <div class="chat-window-wrapper">
         <div class="chat-window-header">
-            <p>This is where the recepient's info is shown</p>
+            <p style="float: left">This is where the recepient's info is shown</p>
+            <i class="fas fa-ban fa-2x" style="float: right"></i>
         </div>
         <div class="chat-window-body">
-            <p>This is where the chatting is supposed to happen</p>
+            <div class="chat-window-initial-message">
+                <i class="far fa-comments fa-4x"></i>
+                <p>Choose one of your contacts and start chatting!</p>
+            </div>
         </div>
         <div class="chat-window-input">
             <p>This is where users types their messages</p>
