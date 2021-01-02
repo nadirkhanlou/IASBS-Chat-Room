@@ -299,3 +299,18 @@ CREATE PROCEDURE GET_USER_BY_PHONE
 BEGIN
 	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE users.phone = PHONE;
 END$$
+
+DELIMITER $$
+CREATE PROCEDURE BLOCK_USER
+	(
+    IN HANDLE NCHAR(11),
+    IN TO_BE_BLOCKED_HANDLE NCHAR(11))
+BEGIN
+	SET @users_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+	SET @participants_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+    IF EXISTS(SELECT * FROM block_list WHERE @users_id = users_id && @participants_id = participants_id)
+    THEN
+	INSERT INTO block_list (users_id, participants_id, created_at) 
+	VALUES (@users_id, @participants_id, NOW());
+    END IF;
+END$$
