@@ -12,8 +12,17 @@ function GetContacts() {
             result = JSON.parse(resultString);
             if(result["success"])
             {
-                contacts = result["users"]["contacts"];
-                blocked = result["users"]["blocked"];
+                let contacts = result["users"]["contacts"];
+                let blocked = result["users"]["blocked"];
+
+                let contactsList = document.getElementsByClassName('user-contacts-list')[0];
+                let contactsListInner = "";
+                for(let i = 0; i < contacts.length; ++i)
+                {
+                    contactsListInner += `<li><a href="#">${contacts[i]['FullName']}</a></li>\n`;
+                }
+                contactsList.innerHTML = contactsListInner;
+
                 console.log(contacts);
             }
             else
