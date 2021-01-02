@@ -1,4 +1,6 @@
 
+GetContacts();
+
 function GetContacts() {
 
     $.ajax({
@@ -12,6 +14,7 @@ function GetContacts() {
             {
                 contacts = result["users"]["contacts"];
                 blocked = result["users"]["blocked"];
+                console.log(contacts);
             }
             else
             {

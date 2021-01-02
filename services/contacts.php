@@ -8,10 +8,10 @@ if(isset($_REQUEST['contacts']))
 
     if(isset($_SESSION["USER"]))
     {
-        $handle = unserialize($_SESSION["USER"])['handle'];
+        $handle = unserialize($_SESSION["USER"])->Handle;
         $user = new user(null, $handle, null, null);
-        $contacts = $user.GetContacts();
-        $blocked = $user.GetBlockedList();
+        $contacts = $user->GetContacts();
+        $blocked = $user->GetBlockedList();
         $users = array("contacts" => $contacts, "blocked" => $blocked);
         $result["users"] = $users;
     }

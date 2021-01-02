@@ -259,3 +259,14 @@ BEGIN
 	SELECT * FROM users WHERE 
 	HANDLE = users.handle && `PASSWORD` = users.`password`;
 END$$
+
+DELIMITER $$
+CREATE PROCEDURE GET_CONTACTS
+	(
+    IN HANDLE NVARCHAR(255))
+BEGIN
+	SET @userId = (SELECT id FROM users WHERE HANDLE = users.handle);
+	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE 
+	HANDLE != users.handle && users.id NOT IN
+    (SELECT block_list.participants_id FROM block_list WHERE users_id = @userId);
+END$$

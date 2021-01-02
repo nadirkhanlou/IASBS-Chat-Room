@@ -4,20 +4,24 @@ require_once "../database.php";
 
 class accessibleUser
 {
-	private $fullName;
-	private $handle;
-	private $phoneNumber;
+	public $FullName;
+	public $Handle;
+	public $PhoneNumber;
 
 	function __construct($user)
 	{
-		$this->fullName = $user->fullName;
-		$this->handle = $user->handle;
-		$this->phoneNumber = $user->phoneNumber;
+		$this->FullName = $user->GetFullName();
+		$this->Handle = $user->GetHandle();
+		$this->PhoneNumber = $user->GetPhoneNumber();
 	}
+
 }
 
-class user extends accessibleUser
+class user
 {
+	private $fullName;
+	private $handle;
+	private $phoneNumber;
 	private $password;
 	
 	/*
@@ -32,7 +36,6 @@ class user extends accessibleUser
 		$this->phoneNumber = $phoneNumber;
 		$this->password = $isPasswordHashed ? $password : user::HashPassword($password);
 	}
-	
 	
 	//Getters
 	
@@ -50,12 +53,7 @@ class user extends accessibleUser
 	{
 		return $this->phoneNumber;
 	}
-	
-	public function GetPassword ()
-	{
-		return $this->password;
-	}
-	
+
 	//Static methods
 	
 	static function HashPassword($password)
@@ -104,7 +102,16 @@ class user extends accessibleUser
 	
 	function GetContacts()
 	{
-
+		$query = "CALL GET_CONTACTS('{$this->handle}')";
+		$result = database::ExecuteQuery($query);
+		$rows = $result->fetch_all(MYSQLI_ASSOC);
+		$retVal = [];
+		for ($i = 0; $i < count($rows); ++$i) {
+			$user = new user($rows[$i]['full_name'], $rows[$i]['handle'], $rows[$i]['phone'], "");
+			$contact = new accessibleUser($user);
+			array_push($retVal, $contact);
+		}
+		return $retVal;
 	}
 
 	function GetBlockedList()
