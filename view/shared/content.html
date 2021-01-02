@@ -1,12 +1,13 @@
 <div class="left-side-wrapper">
     <div class="user-overview">
-        <div class="user-info" style="float: left">
-            <p class="user-handle"><?php echo '@handle'; ?></p>
-            <p class="user-full-name"><?php echo 'full name'; ?></p>
+        <div class="user-info">
+            <span><?php echo $handle; ?></span>
+            <br/>
+            <span><?php echo $fullName; ?></span>
         </div>
         <div class="buttons" style="float: right">
-            <i class="fas fa-sign-out-alt fa-2x" id="user-overview-logout-button" style="float: right"></i>
-            <i class="fas fa-edit fa-2x" id="user-overview-settings-button" style="float: right"></i>
+            <i title="sign out" class="fas fa-sign-out-alt fa-2x" id="user-overview-logout-button" style="float: right"></i>
+            <i title="edit info" class="fas fa-edit fa-2x" id="user-overview-settings-button" style="float: right"></i>
         </div>
     </div>
     <div class="user-contacts-wrapper">
@@ -18,11 +19,11 @@
     <div class="user-settings-wrapper">
         <form class="user-settings-form">
             <br/><label>full name</label><br/>
-            <input type="text" id="full-name" onblur="ValidateNameInput(this)" placeholder="full name" value="<?php echo 'full name' ?>"/>
+            <input type="text" id="full-name" onblur="ValidateNameInput(this)" placeholder="full name" value="<?php echo $fullName; ?>"/>
             <br/><label>handle</label><br/>
-            <input type="text" id="handle" onkeyup="CheckHandleAvailability(this)" placeholder="@handle" value="<?php echo 'handle' ?>"/>
+            <input type="text" id="handle" onkeyup="CheckHandleAvailability(this)" placeholder="@handle" value="<?php echo $handle; ?>"/>
             <br/><label>phone number</label><br/>
-            <input type="text" id="phone-number" value="<?php echo '99999999999' ?>" disabled/>
+            <input type="text" id="phone-number" value="<?php echo $phoneNumber; ?>" disabled/>
             <br/><label>current password</label><br/>
             <input type="password" id="current-password" placeholder="current password"/>
             <br/><label>new password</label><br/>
@@ -36,7 +37,7 @@
     <div class="chat-window-wrapper">
         <div class="chat-window-header">
             <p style="float: left">This is where the recepient's info is shown</p>
-            <i class="fas fa-ban fa-2x" style="float: right"></i>
+            <i title="block" class="fas fa-ban fa-2x" style="float: right"></i>
         </div>
         <div class="chat-window-body">
             <div class="chat-window-initial-message">
@@ -45,7 +46,10 @@
             </div>
         </div>
         <div class="chat-window-input">
-            <p>This is where users types their messages</p>
+            <form>
+                <input type="text" placeholder="type a message">
+                <button type="send">send</button>
+            </form>
         </div>
     </div>
 </div>
