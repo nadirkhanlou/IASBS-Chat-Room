@@ -15,7 +15,7 @@ $(function() {
                 if(result["success"])
                 {
                     console.log("Logged out successfully");
-                    location.reload();
+                    $('#content-wrapper-div').load("view/login.html");
                 }
                 else
                 {

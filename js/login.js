@@ -130,6 +130,7 @@ function Login() {
             if(result["success"])
             {
                 user = result["user"];
+                $('#content-wrapper-div').load("view/shared/content.html");
             }
             else
             {
