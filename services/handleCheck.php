@@ -1,21 +1,21 @@
 <?php
 session_start();
-require_once "model/user.php";
+require_once "../model/user.php";
 
-if(isset($_POST['handle']))
+if(isset($_REQUEST['handle']))
 {
     $result = array("success" => true, "errorMessage" => "");
 
-    if(!(isset($_SESSION["USER"]) && unserialize($_SESSION["USER"])['handle'] == $_POST['handle']))
+    if(!(isset($_SESSION["USER"]) && unserialize($_SESSION["USER"])['handle'] == $_REQUEST['handle']))
     {
-        if(user::IsHandleExist($_POST['handle']))
+        if(user::IsHandleExist($_REQUEST['handle']))
         {
-            $result["success"] = false;
-            $result["errorMessage"] = "The Handle already exists.";
+            $_REQUEST["success"] = false;
+            $_REQUEST["errorMessage"] = "The Handle already exists.";
         }
     }
 
-    echo serialize($result);
+    echo json_encode($result);
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
-require_once "model/message.php";
-require_once "database.php";
+require_once "message.php";
+require_once "../database.php";
 
 class accessibleUser
 {
@@ -30,7 +30,7 @@ class user extends accessibleUser
 		$this->fullName = $fullName;
 		$this->handle = $handle;
 		$this->phoneNumber = $phoneNumber;
-		$this->password = isPasswordHashed ? $password : user::HashPassword($password);
+		$this->password = $isPasswordHashed ? $password : user::HashPassword($password);
 	}
 	
 	
@@ -65,6 +65,7 @@ class user extends accessibleUser
 	
 	static function IsHandleExist($handle)
 	{
+		return false;
 		$query = "";
 		$result = database::ExecuteQuery($query);
         return mysqli_num_rows($result) > 0;
@@ -72,6 +73,7 @@ class user extends accessibleUser
 	
 	static function IsPhoneNumberExist($phoneNumber)
 	{
+		return false;
 		$query = "";
 		$result = database::ExecuteQuery($query);
         return mysqli_num_rows($result) > 0;
@@ -81,8 +83,9 @@ class user extends accessibleUser
 	
 	function StoreInDatebase()
 	{
-		$query = "";
+		$query = "CALL ADD_USER('{$this->phoneNumber}', '{$this->handle}', '{$this->password}', '{$this->fullName}')";
 		$result = database::ExecuteQuery($query);
+		return !$result ? false : true;
 	}
 	
 	function CheckPassword()

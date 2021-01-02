@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once "model/user.php";
+require_once "../model/user.php";
 
-if(isset($_POST['contacts']))
+if(isset($_REQUEST['contacts']))
 {
     $result = array("success" => true, "errorMessage" => "", "users" => "");
 
@@ -21,7 +21,7 @@ if(isset($_POST['contacts']))
         $result["errorMessage"] = "You are not logged in";
     }
 
-    echo serialize($result);
+    echo json_encode($result);
 }
 
 ?>

@@ -89,10 +89,11 @@ function CheckPassword(elem) {
 }
 
 function CreateAccount() {
-    fullName = document.getElementById("full-name").value;
-    handle = document.getElementById("handle").value;
-    phoneNumber = document.getElementById("phone-number").value;
-    password = document.getElementById("password").value;
+    let fullName = document.getElementById("full-name").value;
+    let handle = document.getElementById("handle").value;
+    let phoneNumber = document.getElementById("phone-number").value;
+    let password = document.getElementById("password").value;
+    phoneNumber = phoneNumber.replace(/ /g,'')
     $.ajax({
         url: 'services/createAccount.php',
         type: 'POST',

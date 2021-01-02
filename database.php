@@ -1,4 +1,5 @@
 <?php
+require_once "config.php";
 
 class database
 {
@@ -10,7 +11,7 @@ class database
         global $db_name;
 
         $connection = mysqli_connect($server, $db_username, $db_password, $db_name);
-        if ($connectionconnect_error)
+        if ($connection->connect_error)
         {
             die("Connection failed: " . $connection->connect_error);
         }

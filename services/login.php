@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once "model/user.php";
+require_once "../model/user.php";
 
-if(isset($_POST['handle']))
+if(isset($_SESSION['handle']))
 {
     $result = array("success" => true, "errorMessage" => "", "user" => "");
 
-    $user = new user(null, $_POST['handle'], null, $_POST['password']);
+    $user = new user(null, $_SESSION['handle'], null, $_SESSION['password']);
     if(!$user.CheckPassword())
     {
         $result["success"] = false;
@@ -19,7 +19,7 @@ if(isset($_POST['handle']))
         $result["user"] = $accessibleUser;
     }
 
-    echo serialize($result);
+    echo json_encode($result);
 }
 
 ?>

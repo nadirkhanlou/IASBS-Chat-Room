@@ -1,6 +1,6 @@
 <?php
-require_once "model/user.php";
-require_once "database.php";
+require_once "user.php";
+require_once "../database.php";
 
 class message
 {

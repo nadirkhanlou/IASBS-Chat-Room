@@ -27,14 +27,14 @@ DROP TABLE IF EXISTS `users` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `phone` VARCHAR(16) NOT NULL,
+  `phone` NCHAR(11) NOT NULL,
   `handle` VARCHAR(255) NOT NULL,
-  `password` NVARCHAR(24) NOT NULL,
+  `password` NVARCHAR(255) NOT NULL,
   `full_name` NVARCHAR(150) NOT NULL DEFAULT '',
   `is_active` TINYINT(1) NOT NULL DEFAULT 0,
   `is_reported` TINYINT(1) NOT NULL DEFAULT 0,
   `is_blocked` TINYINT(1) NOT NULL DEFAULT 0,
-  `preferences` TEXT NOT NULL,
+  `preferences` TEXT,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
@@ -241,11 +241,11 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 DELIMITER $$
 CREATE PROCEDURE ADD_USER
-	(IN PHONE INT,
+	(IN PHONE NCHAR(11),
     IN HANDLE NVARCHAR(255),
-	IN PASSWORD NVARCHAR(24),
+	IN `PASSWORD` NVARCHAR(255),
     IN FULL_NAME NVARCHAR(150))
 BEGIN
-	INSERT INTO users (phone,handle,`password`,full_name,created_at,updated_at) 
-	VALUES (PHONE,HANDLE,`PASSWORD`, NOW(), NOW());
+	INSERT INTO users (phone, handle, `password`, full_name, created_at, updated_at) 
+	VALUES (PHONE, HANDLE, `PASSWORD`, FULL_NAME, NOW(), NOW());
 END$$
