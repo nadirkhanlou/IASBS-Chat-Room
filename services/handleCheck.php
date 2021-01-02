@@ -6,12 +6,14 @@ if(isset($_REQUEST['handle']))
 {
     $result = array("success" => true, "errorMessage" => "");
 
-    if(!(isset($_SESSION["USER"]) && unserialize($_SESSION["USER"])['handle'] == $_REQUEST['handle']))
+    
+    if(!(isset($_SESSION["USER"]) && unserialize($_SESSION["USER"])->Handle == $_REQUEST['handle']))
     {
+        
         if(user::IsHandleExist($_REQUEST['handle']))
         {
-            $_REQUEST["success"] = false;
-            $_REQUEST["errorMessage"] = "The Handle already exists.";
+            $result["success"] = false;
+            $result["errorMessage"] = "The Handle already exists.";
         }
     }
 

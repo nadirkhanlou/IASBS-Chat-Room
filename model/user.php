@@ -63,16 +63,14 @@ class user
 	
 	static function IsHandleExist($handle)
 	{
-		return false;
-		$query = "";
+		$query = "CALL GET_USER_BY_HANDLE('{$handle}')";
 		$result = database::ExecuteQuery($query);
         return mysqli_num_rows($result) > 0;
 	}
 	
 	static function IsPhoneNumberExist($phoneNumber)
 	{
-		return false;
-		$query = "";
+		$query = "CALL GET_USER_BY_PHONE({$handle})";
 		$result = database::ExecuteQuery($query);
         return mysqli_num_rows($result) > 0;
 	}
