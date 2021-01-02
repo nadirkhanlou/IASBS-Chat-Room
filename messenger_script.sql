@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
-    `message` NVARCHAR(255) NOT NULL DEFAULT '',
+    `message` LONGTEXT NOT NULL DEFAULT '',
     `created_at` DATETIME NOT NULL,
     `deleted_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
@@ -114,6 +114,11 @@ CREATE TABLE IF NOT EXISTS `block_list` (
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_blocks_users1`
     FOREIGN KEY (`users_id`)
+    REFERENCES `users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    CONSTRAINT `fk_blocks_users2`
+    FOREIGN KEY (`participants_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -278,4 +283,16 @@ UPDATE users SET handle = USERNEW, password = PASS, full_name = FN WHERE handle 
 END $$
 DELIMITER ;
 
-CALL EDITPROFILE('HOM','HOM','HOM','HOM','HOM');
+CALL EDITPROFILE('WWW','WWW','WWW','WWW','WWW');
+
+----------------------------------------------------------------------------------------
+
+DELIMITER $$
+CREATE PROCEDURE BLOCKUSER(IN USER1 VARCHAR(300), IN USER2 VARCHAR(300))
+BEGIN
+INSERT INTO block_list (user_id, participants_id, created_at) VALUES(USER1, USER2, NOW());
+END $$
+
+DELIMITER ;
+
+CALL BLOCKUSER('WWW', 'DOD');
