@@ -9,11 +9,13 @@ $(function() {
             url: 'services/logout.php',
             type: 'POST',
             async: !1,
-            data: {logout: 1},
+            data: {'logout': 1},
             success: function (resultString) {
+                let result = JSON.parse(resultString);
                 if(result["success"])
                 {
                     console.log("Logged out successfully");
+                    $('#content-wrapper-div').load("view/login.html");
                 }
                 else
                 {

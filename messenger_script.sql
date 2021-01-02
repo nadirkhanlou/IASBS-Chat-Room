@@ -3,7 +3,6 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -12,8 +11,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema messenger
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `messenger` ;
-
---
 
 -- -----------------------------------------------------
 -- Schema messenger
@@ -29,22 +26,44 @@ DROP TABLE IF EXISTS `users` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `users` (
-                                       `id` INT NOT NULL AUTO_INCREMENT,
-                                       `phone` NCHAR(11) NOT NULL,
-    `handle` VARCHAR(255) NOT NULL,
-    `password` NVARCHAR(255) NOT NULL,
-    `full_name` NVARCHAR(150) NOT NULL DEFAULT '',
-    `is_active` TINYINT(1) NOT NULL DEFAULT 0,
-    `is_reported` TINYINT(1) NOT NULL DEFAULT 0,
-    `is_blocked` TINYINT(1) NOT NULL DEFAULT 0,
-    `preferences` TEXT,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE (phone),
-    UNIQUE (handle))
-    ENGINE = InnoDB;
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `phone` NCHAR(11) NOT NULL,
+  `handle` VARCHAR(255) NOT NULL,
+  `password` NVARCHAR(255) NOT NULL,
+  `full_name` NVARCHAR(150) NOT NULL DEFAULT '',
+  `is_active` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_reported` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_blocked` TINYINT(1) NOT NULL DEFAULT 0,
+  `preferences` TEXT,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE (phone),
+  UNIQUE (handle))
+ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `conversation`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `conversation` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `conversation` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(40) NOT NULL DEFAULT '',
+  `creator_id` INT NOT NULL,
+  `channel_id` VARCHAR(45) NOT NULL DEFAULT '',
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  `deleted_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+    FOREIGN KEY (`creator_id`)
+    REFERENCES `users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `messages`
@@ -53,26 +72,26 @@ DROP TABLE IF EXISTS `messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `messages` (
-                                          `id` INT NOT NULL,
-                                          `guid` VARCHAR(100) NOT NULL DEFAULT '',
-    `reciever_id`	INT NOT NULL,
-    `sender_id` INT NOT NULL,
-    `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
-    `message` NVARCHAR(255) NOT NULL DEFAULT '',
-    `created_at` DATETIME NOT NULL,
-    `deleted_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_messages_users2`
-    FOREIGN KEY (`reciever_id`)
-    REFERENCES `users` (`id`)
+  `id` INT NOT NULL,
+  `guid` VARCHAR(100) NOT NULL DEFAULT '',
+  `conversation_id` INT NOT NULL,
+  `sender_id` INT NOT NULL,
+  `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
+  `message` VARCHAR(255) NOT NULL DEFAULT '',
+  `created_at` DATETIME NOT NULL,
+  `deleted_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_messages_conversation1`
+    FOREIGN KEY (`conversation_id`)
+    REFERENCES `conversation` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `fk_messages_users1`
+  CONSTRAINT `fk_messages_users1`
     FOREIGN KEY (`sender_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 SHOW WARNINGS;
 
@@ -83,20 +102,20 @@ DROP TABLE IF EXISTS `reports` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `reports` (
-                                         `id` INT NOT NULL AUTO_INCREMENT,
-                                         `users_id` INT NOT NULL,
-                                         `participants_id` INT NOT NULL,
-                                         `report_type` VARCHAR(45) NOT NULL,
-    `notes` TEXT NOT NULL,
-    `status` ENUM('pending', 'resolved') NOT NULL DEFAULT 'pending',
-    `created_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_reports_users1`
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `users_id` INT NOT NULL,
+  `participants_id` INT NOT NULL,
+  `report_type` VARCHAR(45) NOT NULL,
+  `notes` TEXT NOT NULL,
+  `status` ENUM('pending', 'resolved') NOT NULL DEFAULT 'pending',
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_reports_users1`
     FOREIGN KEY (`users_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 SHOW WARNINGS;
 
@@ -107,17 +126,43 @@ DROP TABLE IF EXISTS `block_list` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `block_list` (
-                                            `id` INT NOT NULL AUTO_INCREMENT,
-                                            `users_id` INT NOT NULL,
-                                            `participants_id` INT NOT NULL,
-                                            `created_at` DATETIME NOT NULL,
-                                            PRIMARY KEY (`id`),
-    CONSTRAINT `fk_blocks_users1`
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `users_id` INT NOT NULL,
+  `participants_id` INT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_blocks_users1`
     FOREIGN KEY (`users_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `deleted_conversations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `deleted_conversations` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `deleted_conversations` (
+  `id` INT NOT NULL,
+  `conversation_id` INT NOT NULL,
+  `users_id` INT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_delete_conversations_conversation1`
+    FOREIGN KEY (`conversation_id`)
+    REFERENCES `conversation` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_delete_conversations_users1`
+    FOREIGN KEY (`users_id`)
+    REFERENCES `users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SHOW WARNINGS;
 
@@ -128,23 +173,23 @@ DROP TABLE IF EXISTS `deleted_messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `deleted_messages` (
-                                                  `id` INT NOT NULL AUTO_INCREMENT,
-                                                  `messages_id` INT NOT NULL,
-                                                  `users_id` INT NOT NULL,
-                                                  `created_at` DATETIME NOT NULL,
-                                                  `updated_at` DATETIME NOT NULL,
-                                                  PRIMARY KEY (`id`),
-    CONSTRAINT `fk_deleted_messages_messages1`
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `messages_id` INT NOT NULL,
+  `users_id` INT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_deleted_messages_messages1`
     FOREIGN KEY (`messages_id`)
     REFERENCES `messages` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `fk_deleted_messages_users1`
+  CONSTRAINT `fk_deleted_messages_users1`
     FOREIGN KEY (`users_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 SHOW WARNINGS;
 
@@ -155,15 +200,15 @@ DROP TABLE IF EXISTS `activities` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `activities` (
-                                            `id` INT NOT NULL,
-                                            `activity_type` VARCHAR(45) NOT NULL,
-    `activity_id` INT NOT NULL,
-    `title` VARCHAR(45) NOT NULL,
-    `detail` TEXT NOT NULL,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`))
-    ENGINE = InnoDB;
+  `id` INT NOT NULL,
+  `activity_type` VARCHAR(45) NOT NULL,
+  `activity_id` INT NOT NULL,
+  `title` VARCHAR(45) NOT NULL,
+  `detail` TEXT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
 SHOW WARNINGS;
 
@@ -174,19 +219,19 @@ DROP TABLE IF EXISTS `attachments` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `attachments` (
-                                             `id` INT NOT NULL,
-                                             `messages_id` INT NOT NULL,
-                                             `thumb_url` VARCHAR(45) NOT NULL,
-    `file_url` VARCHAR(45) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL,
-    `updated_at` DATETIME NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_attachments_messages1`
+  `id` INT NOT NULL,
+  `messages_id` INT NOT NULL,
+  `thumb_url` VARCHAR(45) NOT NULL,
+  `file_url` VARCHAR(45) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  `updated_at` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_attachments_messages1`
     FOREIGN KEY (`messages_id`)
     REFERENCES `messages` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 SHOW WARNINGS;
 
@@ -194,88 +239,78 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-----------------------------------------------------------------------------------------
---------------------------------------PROCEDURES----------------------------------------
-----------------------------------------------------------------------------------------
-
 DELIMITER $$
 CREATE PROCEDURE ADD_USER
-(IN PHONE NCHAR(11),
+	(IN PHONE NCHAR(11),
     IN HANDLE NVARCHAR(255),
-    IN `PASSWORD` NVARCHAR(255),
+	IN `PASSWORD` NVARCHAR(255),
     IN FULL_NAME NVARCHAR(150))
 BEGIN
-INSERT INTO users (phone, handle, `password`, full_name, created_at, updated_at)
-VALUES (PHONE, HANDLE, `PASSWORD`, FULL_NAME, NOW(), NOW());
+	INSERT INTO users (phone, handle, `password`, full_name, created_at, updated_at) 
+	VALUES (PHONE, HANDLE, `PASSWORD`, FULL_NAME, NOW(), NOW());
 END$$
-
----------------------------------------------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE CHECK_PASSWORD
-(
+	(
     IN HANDLE NVARCHAR(255),
-    IN `PASSWORD` NVARCHAR(255))
+	IN `PASSWORD` NVARCHAR(255))
 BEGIN
-SELECT * FROM users WHERE
-        HANDLE = users.handle && `PASSWORD` = users.`password`;
+	SELECT * FROM users WHERE 
+	HANDLE = users.handle && `PASSWORD` = users.`password`;
 END$$
-
----------------------------------------------------------------------------------------
 
 DROP PROCEDURE GET_CONTACTS
 
-    DELIMITER $$
+DELIMITER $$
 CREATE PROCEDURE GET_CONTACTS
-(
+	(
     IN HANDLE NVARCHAR(255))
 BEGIN
 	SET @userId = (SELECT id FROM users WHERE HANDLE = users.handle);
-SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE
-    HANDLE != users.handle && users.id NOT IN
+	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE 
+	HANDLE != users.handle && users.id NOT IN
     (SELECT block_list.participants_id FROM block_list WHERE users_id = @userId);
 END$$
-
-----------------------------------------------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE GET_BLOCKED
-(
+	(
     IN HANDLE NVARCHAR(255))
 BEGIN
 	SET @userId = (SELECT id FROM users WHERE HANDLE = users.handle);
-SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE
-    HANDLE != users.handle && users.id IN
+	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE 
+	HANDLE != users.handle && users.id IN
     (SELECT block_list.participants_id FROM block_list WHERE users_id = @userId);
 END$$
 
-----------------------------------------------------------------------------------------
-
 DELIMITER $$
 CREATE PROCEDURE GET_USER_BY_HANDLE
-(
+	(
     IN HANDLE NVARCHAR(255))
 BEGIN
-SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE users.handle = HANDLE;
+	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE users.handle = HANDLE;
 END$$
-
-----------------------------------------------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE GET_USER_BY_PHONE
-(
+	(
     IN PHONE NCHAR(11))
 BEGIN
-SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE users.phone = PHONE;
+	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE users.phone = PHONE;
 END$$
 
-----------------------------------------------------------------------------------------
-
 DELIMITER $$
-CREATE PROCEDURE EDITPROFILE(IN USEROLD VARCHAR(300),IN USERNEW VARCHAR(300), IN PASSW VARCHAR(50), IN FN VARCHAR(100))
+CREATE PROCEDURE BLOCK_USER
+	(
+    IN HANDLE NCHAR(11),
+    IN TO_BE_BLOCKED_HANDLE NCHAR(11))
 BEGIN
-UPDATE users SET handle = USERNEW, password = PASSW, full_name = FN WHERE handle = USEROLD;
-END $$
-DELIMITER ;
-
-CALL EDITPROFILE('HOM','HOM','HOM','HOM','HOM');
+	SET @users_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+	SET @participants_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+    IF EXISTS(SELECT * FROM block_list WHERE @users_id = users_id && @participants_id = participants_id)
+    THEN
+	INSERT INTO block_list (users_id, participants_id, created_at) 
+	VALUES (@users_id, @participants_id, NOW());
+    END IF;
+END$$

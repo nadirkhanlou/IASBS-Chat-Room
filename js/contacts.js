@@ -21,6 +21,10 @@ function GetContacts() {
                 {
                     contactsListInner += `<li><a href="#">${contacts[i]['FullName']}</a></li>\n`;
                 }
+                for(let i = 0; i < blocked.length; ++i)
+                {
+                    contactsListInner += `<li><a class="contact-blocked" href="#">${blocked[i]['FullName']}</a></li>\n`;
+                }
                 contactsList.innerHTML = contactsListInner;
 
                 console.log(contacts);
