@@ -1,82 +1,102 @@
 div {
     margin: 0px;
 }
-
 .header {
     border: 1px solid black;
     height: 5%;
 }
-
 .content-wrapper {
     border: 1px solid black;
     height: 90%;
     display: flex;
 }
-
 .footer {
     border: 1px solid black;
     height: 5%;
 }
-
 .left-side-wrapper {
-    border: 2px solid purple;
     height: 100%;
     width: 20%;
 }
-
 .right-side-wrapper {
     border: 2px solid cyan;
     height: 100%;
     width: 80%;
 }
-
 .user-overview {
-    border: 2px solid black;
     height: 7%;
+    border-bottom: 1px solid black;
+    overflow: hidden;
 }
-
+.buttons i:hover {
+    cursor: pointer;
+}
 .user-contacts-wrapper {
-    border: 2px solid green;
+    background: #2c2c2c;
     height: 93%;
 }
-
 .user-contacts-search-bar {
-    border: 1px solid grey;
     height: 5%;
 }
-
-.user-contacts-list {
-    border: 1px solid grey;
-    height: 95%;
+.user-contacts-search-bar input {
+    font-size: 17px;
+    width: 100%;
+    height: 100%;
+    outline: 0;
+    border: 0;
+    border-bottom: 1px solid black;
+    background: #f2f2f2;
 }
-
+.user-contacts-list {
+    height: 95%;
+    list-style-type: none;
+    overflow-x: hide;
+    overflow-y: auto;
+}
+.user-contacts-list li a {
+    display: block;
+    color: #FFFFFF;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-bottom: 1px solid black;
+}
+.user-contacts-list li a:hover {
+    background-color: #555;
+    color: #FFFFFF
+}
+.user-contacts-list .contact-blocked {
+    text-decoration: line-through;
+}
 .chat-window-wrapper {
     border: 2px solid orange;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
-
 .chat-window-header {
     border: 1px solid black;
     height: 7%;
 }
-
 .chat-window-body {
     border: 1px solid black;
     height: 88%;
 }
-
+.chat-window-initial-message {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
 .chat-window-input {
     border: 1px solid black;
     height: 5%;
 }
-
 .user-settings-wrapper {
-    border: 2px solid yellow;
+    background: #2c2c2c;
     height: 93%;
 }
-
 .user-settings-form input {
     font-family: "Roboto", sans-serif;
     outline: 0;
@@ -88,14 +108,13 @@ div {
     box-sizing: border-box;
     font-size: 14px;
 }
-
 .user-settings-form label {
     font-family: "Roboto", sans-serif;
+    color: #FFFFFF;
     padding: 15px;
     box-sizing: border-box;
     font-size: 14px;
 }
-
 .user-settings-form button {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
@@ -111,7 +130,6 @@ div {
     transition: all 0.3 ease;
     cursor: pointer;
   }
-
   .user-settings-form button:hover,.form button:active,.form button:focus {
     background: #43A047;
   }
