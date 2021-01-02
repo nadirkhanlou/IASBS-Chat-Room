@@ -5,6 +5,25 @@ $(function() {
     });
 
     $('#user-overview-logout-button').on('click', function() {
-        // Code for the logout process
+        $.ajax({
+            url: 'services/logout.php',
+            type: 'POST',
+            async: !1,
+            data: {logout: 1},
+            success: function (resultString) {
+                if(result["success"])
+                {
+                    console.log("Logged out successfully");
+                }
+                else
+                {
+                    console.log(result["errorMessage"]);
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                console.log("Status: " + textStatus);
+                console.log("Error: " + errorThrown); 
+            }
+        });
     });
 });
