@@ -53,13 +53,14 @@ DROP TABLE IF EXISTS `messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `messages` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `status` VARCHAR(2) NOT NULL,
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
     `message` LONGTEXT NOT NULL DEFAULT '',
     `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME NOT NULL DEFAULT '',
     `deleted_at` DATETIME NOT NULL  DEFAULT '',
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_messages_users2`
@@ -302,11 +303,35 @@ DELIMITER $$
 CREATE PROCEDURE DELETEMESSAGE(IN MID INT)
 BEGIN
 SET
-UPDATE messages SET status = '2' WHERE messages.id = MID;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
+UPDATE messages SET status = '2', deleted_at = NOW() WHERE messages.id = MID;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
 END $$
 
 DELIMITER ;
 
 CALL DELETEMESSAGE(1);
+
+-------------------------------------------------------------------------------------------
+
+DELIMITER $$
+
+CREATE PROCEDURE EDITMESSAGE(IN MID INT, IN MSG LONGTEXT)
+BEGIN
+UPDATE messages SET status = '3', message = MSG, updated_at = NOW() WHERE messages.id = MID;
+END $$
+
+DELIMITER ;
+
+CALL EDITMESSAGE( 1 , 'HI');
+-------------------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE GETHISTORY(IN FROMUSER VARCHAR(300), IN TOUSER VARCHAR(300))
+BEGIN
+SELECT * FROM messages WHERE sender_id = FROMUSER AND reciever_id = TOUSER;
+END $$
+
+DELIMITER ;
+
+CALL GETHISTORY('www', 'ddd');
 
 -------------------------------------------------------------------------------------------
