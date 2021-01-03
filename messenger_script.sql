@@ -276,6 +276,7 @@ BEGIN
 	SET @participants_id = (SELECT id FROM users WHERE TOUSER = users.handle);
 	INSERT INTO MESSAGES(state, sender_id, reciever_id, message, message_type, created_at)
 	VALUES('1', @users_id, @participants_id, MSG, MSGTYPE, NOW());
+    SELECT NOW();
 END $$
 
 DELIMITER ;

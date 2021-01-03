@@ -69,7 +69,7 @@ $(function() {
 
     $('.user-contacts-list').on('click', 'li span:first-of-type', function() {
         let contactHandle = $(this).html();
-        $('#chat-window-header-info').html(contactHandle);
+        $('.chat-window-header').html(contactHandle);
     });
 
     $('#user-setting-save-changes-button').on('click', function() {
@@ -106,6 +106,34 @@ $(function() {
 
     $(".user-info").ready(function() {
         ShowUserInfo();
+    });
+
+    $(".chat-window-input button").on('click', function() {
+        let receiverHandle = $('.chat-window-header').html();
+        let messageText = $('.chat-window-input input').val();
+        $.ajax({
+            url: 'services/sendMessage.php',
+            type: 'GET',
+            async: !1,
+            data: {'receiverHandle': receiverHandle, 'messageText': messageText},
+            success: function (resultString) {
+                result = JSON.parse(resultString);
+                if(result["success"])
+                {
+                    let dateTime = result["dateTime"];
+                    console.log(dateTime);
+                    
+                }
+                else
+                {
+                    console.log(result["errorMessage"]);
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                console.log("Status: " + textStatus);
+                console.log("Error: " + errorThrown); 
+            }
+        });
     });
 });
 

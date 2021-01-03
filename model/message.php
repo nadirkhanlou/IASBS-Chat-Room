@@ -19,7 +19,7 @@ class message
 
 	function GetDateTime()
 	{
-		return strtotime($dateTime);
+		return $this->dateTime;
 	}
 	
 	function SendMessage()
@@ -29,8 +29,16 @@ class message
 
 			$query = "CALL SENDMESSAGE('{$this->senderHandle}', '{$this->receiverHandle}', '{$this->message}', 'text')";
 			$result = database::ExecuteQuery($query);
-			
-			return !$result ? false : true;
+	
+			if(mysqli_num_rows($result) > 0)
+			{
+				$this->dateTime = $result->fetch_array()['created_at'];
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		return false;
 	}
