@@ -1,9 +1,9 @@
 <div class="left-side-wrapper">
     <div class="user-overview">
         <div class="user-info">
-            <span><?php echo $handle; ?></span>
+            <span id="user-info-handle"></span>
             <br/>
-            <span><?php echo $fullName; ?></span>
+            <span id="user-info-full-name"></span>
         </div>
         <div class="buttons" style="float: right">
             <i title="sign out" class="fas fa-sign-out-alt fa-2x" id="user-overview-logout-button" style="float: right"></i>
@@ -29,7 +29,7 @@
             <br/><label>new password</label><br/>
             <input type="password" id="new-password" onblur="CheckPassword(this)" placeholder="new password"/>
             <br/>
-            <button id="user-setting-save-changes-button">save</button>
+            <button id="user-setting-save-changes-button" type="button">save</button>
         </form>
     </div>
 </div>

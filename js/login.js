@@ -41,7 +41,7 @@ $(function () {
                 if(result["success"])
                 {
                     let user = result["user"];
-                    $('#content-wrapper-div').load("view/shared/content.html");
+                    location.reload();
                 }
                 else
                 {
