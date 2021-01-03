@@ -40,7 +40,7 @@ $(function () {
                 result = JSON.parse(resultString);
                 if(result["success"])
                 {
-                    user = result["user"];
+                    let user = result["user"];
                     $('#content-wrapper-div').load("view/shared/content.html");
                 }
                 else

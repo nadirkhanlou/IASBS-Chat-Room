@@ -97,7 +97,24 @@ class user
 		}
 		return false;
 	}
-	
+
+	function EditInfo($NewHandle, $newPassword, $newFullName)
+	{
+		$query = "CALL EDITPROFILE('{$this->handle}', '{$NewHandle}', '{$newPassword}', '{$newFullName}')";
+		$result = database::ExecuteQuery($query);
+		if(!$result)
+		{
+			return false;
+		}
+		else
+		{
+			$this->fullName = $newFullName;
+            $this->handle = $NewHandle;
+            $this->password = $newPassword;
+			return true;
+		}
+	}
+
 	function GetContacts()
 	{
 		$query = "CALL GET_CONTACTS('{$this->handle}')";

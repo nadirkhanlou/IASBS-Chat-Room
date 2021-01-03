@@ -67,4 +67,41 @@ $(function() {
             }
         });
     });
+
+    $('.user-contacts-list li span:first-of-type').on('click', function() {
+        console.log("test");
+    });
+
+    $('#user-setting-save-changes-button').on('click', function() {
+        let fullName = document.getElementById("full-name").value;
+        let handle = document.getElementById("login-handle").value;
+        let currentPassword = document.getElementById("login-password").value;
+        let newPassword = document.getElementById("login-password").value;
+        if(newPassword == "")
+            newPassword = currentPassword;
+        console.log("hi");
+        // $.ajax({
+        //     url: 'services/editInfo.php',
+        //     type: 'POST',
+        //     async: !1,
+        //     data: {'currentPassword': currentPassword, 'newFullName': fullName, 'newHandle': handle, 'newPassword': newPassword},
+        //     success: function (resultString) {
+        //         result = JSON.parse(resultString);
+        //         if(result["success"])
+        //         {
+        //             let user = result["user"];
+        //             //$('#content-wrapper-div').load("view/shared/content.html");
+        //             console.log("succeed");
+        //         }
+        //         else
+        //         {
+        //             console.log(result["errorMessage"]);
+        //         }
+        //     },
+        //     error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        //         console.log("Status: " + textStatus);
+        //         console.log("Error: " + errorThrown); 
+        //     }
+        // });
+    });
 });
