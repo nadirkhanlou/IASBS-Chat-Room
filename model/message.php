@@ -23,6 +23,22 @@ class accessibleMessage
 
 }
 
+class editedMessages
+{
+	public $MessageId;
+    public $ReceiverHandle;
+    public $EditType;
+	public $NewMessages;
+	
+	function __construct($messageId, $receiverHandle, $editType, $newMessages)
+	{
+		$this->MessageId = $messageId;
+		$this->ReceiverHandle = $receiverHandle;
+		$this->EditType = $editType;
+		$this->NewMessages = $newMessages;
+	}
+}
+
 class message
 {
 	private $senderHandle;
@@ -86,8 +102,8 @@ class message
 			$rows = $result->fetch_all(MYSQLI_ASSOC);
 			$retVal = [];
 			for ($i = 0; $i < count($rows); ++$i) {
-				$contact = new accessibleMessage($rows[$i]['senderHandle'], $handle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
-				array_push($retVal, $contact);
+				$messages = new accessibleMessage($rows[$i]['senderHandle'], $handle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
+				array_push($retVal, $messages);
 			}
 				
 			return $retVal;
@@ -109,8 +125,8 @@ class message
 			$rows = $result->fetch_all(MYSQLI_ASSOC);
 			$retVal = [];
 			for ($i = 0; $i < count($rows); ++$i) {
-				$contact = new accessibleMessage($senderHandle, $handle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
-				array_push($retVal, $contact);
+				$messages = new accessibleMessage($senderHandle, $handle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
+				array_push($retVal, $messages);
 			}
 				
 			return $retVal;
@@ -132,8 +148,31 @@ class message
 			$rows = $result->fetch_all(MYSQLI_ASSOC);
 			$retVal = [];
 			for ($i = 0; $i < count($rows); ++$i) {
-				$contact = new accessibleMessage($handle, $contactHandle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
-				array_push($retVal, $contact);
+				$messages = new accessibleMessage($handle, $contactHandle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
+				array_push($retVal, $messages);
+			}
+				
+			return $retVal;
+		}
+		return false;
+	}
+
+	static function GetRecentEditedMessages($handle)
+	{
+		if(user::IsHandleExist($handle))
+		{
+
+			$query = "CALL messagesRecentlyEditedList('{$handle}')";
+			$result = database::ExecuteQuery($query);
+	
+			if(!$result)
+				return false;
+
+			$rows = $result->fetch_all(MYSQLI_ASSOC);
+			$retVal = [];
+			for ($i = 0; $i < count($rows); ++$i) {
+				$messages = new editedMessages($rows[$i]['messageId'], $rows[$i]['receiverHandle'], $rows[$i]['edit_type'], $rows[$i]['new_messages']);
+				array_push($retVal, $messages);
 			}
 				
 			return $retVal;

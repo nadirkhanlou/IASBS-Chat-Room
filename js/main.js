@@ -216,7 +216,7 @@ function LoadChat(contact)
                         }
                         else
                         {
-                            receivedMsgHTML += ShowMessage(sentIndex[sentIndex], true, true);
+                            receivedMsgHTML += ShowMessage(receivedMsg[sentIndex], true, true);
                             sentIndex++;
                         }
                     }  
@@ -275,6 +275,10 @@ function ShowUserInfo() {
 }
 
 window.setInterval(function() {
+    GetNewMessages();
+}, 1000);
+
+function GetNewMessages() {
     $.ajax({
         url: 'services/getNewMessages.php',
         type: 'GET',
@@ -307,4 +311,28 @@ window.setInterval(function() {
             console.log("Error: " + errorThrown); 
         }
     });
-}, 1000);
+}
+
+function GetEditedList() {
+    $.ajax({
+        url: 'services/getEditedMessagesList.php',
+        type: 'GET',
+        async: !1,
+        data: {},
+        success: function (resultString) {
+            result = JSON.parse(resultString);
+            if(result["success"])
+            {
+
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
+}

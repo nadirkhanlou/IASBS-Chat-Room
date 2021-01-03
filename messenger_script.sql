@@ -77,11 +77,12 @@ CREATE TABLE IF NOT EXISTS `messages` (
 
 SHOW WARNINGS;
 
-DROP TABLE IF EXISTS `messages` ;
+DROP TABLE IF EXISTS `new_messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `new_messages` (
     `id` INT NOT NULL AUTO_INCREMENT,
+	`state` VARCHAR(2) NOT NULL default '1',
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
@@ -174,9 +175,26 @@ CREATE TABLE IF NOT EXISTS `activities` (
 
 SHOW WARNINGS;
 
--- -----------------------------------------------------
--- Table `attachments`
--- -----------------------------------------------------
+
+DROP TABLE IF EXISTS `messagesRecentlyEditedList`;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `messagesRecentlyEditedList` (
+	`messageId` INT NOT NULL,
+    `receiverHandle` nvarchar(250) NOT NULL,
+    `edit_type` ENUM('edit', 'delete') NOT NULL,
+    `new_messages` LONGTEXT,
+    PRIMARY KEY (`messageId`),
+	CONSTRAINT `fk_messageId_message`
+    FOREIGN KEY (`messageId`)
+    REFERENCES `messages` (`id`),
+	CONSTRAINT `fk_receiverHandle_user`
+    FOREIGN KEY (`receiverHandle`)
+    REFERENCES `users` (`handle`))
+    ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -316,10 +334,10 @@ BEGIN
     DROP TABLE IF EXISTS newmsg;
     CREATE TEMPORARY TABLE newmsg
 	AS
-	(SELECT message, new_messages.message_type as messageType, new_messages.reciever_id as receiverId, users.id as senderId, users.handle as senderHandle, new_messages.created_at as messageDateTime, new_messages.id as messageId FROM
-    new_messages, users where new_messages.reciever_id = @user_id && new_messages.sender_id = users.id);
-	INSERT INTO MESSAGES(id, sender_id, reciever_id, message, message_type, created_at)
-	SELECT messageId, senderId, receiverId, message, messageType, messageDateTime FROM newmsg;
+	(SELECT message, new_messages.state as messageState, new_messages.message_type as messageType, new_messages.reciever_id as receiverId, users.id as senderId, users.handle as senderHandle, new_messages.created_at as messageDateTime, new_messages.id as messageId FROM
+    new_messages, users where new_messages.reciever_id = @user_id && new_messages.sender_id = users.id && new_messages.state != '2');
+	INSERT INTO MESSAGES(id, state, sender_id, reciever_id, message, message_type, created_at)
+	SELECT messageId, messageState, senderId, receiverId, message, messageType, messageDateTime FROM newmsg;
     DELETE FROM new_messages WHERE id in (SELECT messageId FROM newmsg);
     SELECT message, messageType, senderHandle, messageDateTime, messageId FROM newmsg;
 END $$
@@ -334,7 +352,7 @@ BEGIN
     SET @participants_id = (SELECT id FROM users WHERE CONTACT_HANDLE = users.handle);
     
 	SELECT message, message_type as messageType, created_at as messageDateTime, messages.id as messageId FROM
-    messages WHERE (reciever_id = @user_id && sender_id = @participants_id);
+    messages WHERE (reciever_id = @user_id && sender_id = @participants_id) && messages.state != '2';
     
 END $$
 
@@ -357,12 +375,21 @@ DELIMITER ;
 CALL SENDMESSAGE('www', 'ddd', 'hello');
 
 ------------------------------------------------------------------------------------------
+
+DROP PROCEDURE DELETEMESSAGE
+
 DELIMITER $$
 
-CREATE PROCEDURE DELETEMESSAGE(IN MID INT)
+CREATE PROCEDURE DELETEMESSAGE(IN id INT, IN receiverHandle nvarchar(255))
 BEGIN
-SET
-UPDATE messages SET status = '2', deleted_at = NOW() WHERE messages.id = MID;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
+	UPDATE messages SET state = '2', deleted_at = NOW() WHERE messages.id = id;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
+	IF exists (SELECT * FROM messagesRecentlyEditedList WHERE id = messageId)
+	THEN
+		UPDATE messagesRecentlyEditedList SET edit_type = 'delete' WHERE messages.id = id;
+	ELSE
+		INSERT INTO messagesRecentlyEditedList (messageId, receiverHandle, edit_type)
+        VALUES (id, receiverHandle, 'delete');
+	END IF;
 END $$
 
 DELIMITER ;
@@ -371,11 +398,20 @@ CALL DELETEMESSAGE(1);
 
 -------------------------------------------------------------------------------------------
 
+DROP PROCEDURE EDITMESSAGE
+
 DELIMITER $$
 
-CREATE PROCEDURE EDITMESSAGE(IN MID INT, IN MSG LONGTEXT)
+CREATE PROCEDURE EDITMESSAGE(IN id INT, IN MSG LONGTEXT, IN receiverHandle NVARCHAR(255))
 BEGIN
-UPDATE messages SET status = '3', message = MSG, updated_at = NOW() WHERE messages.id = MID;
+	UPDATE messages SET state = '3', message = MSG, updated_at = NOW() WHERE messages.id = id;
+	IF exists (SELECT * FROM messagesRecentlyEditedList WHERE id = messageId)
+	THEN
+		UPDATE messagesRecentlyEditedList SET edit_type = 'edit', new_messages = MSG WHERE messages.id = id;
+	ELSE
+		INSERT INTO messagesRecentlyEditedList (messageId, receiverHandle, edit_type, new_messages)
+        VALUES (id, receiverHandle, 'edit', MSG);
+	END IF;
 END $$
 
 DELIMITER ;
@@ -394,3 +430,13 @@ DELIMITER ;
 CALL GETHISTORY('www', 'ddd');
 
 -------------------------------------------------------------------------------------------
+
+DROP PROCEDURE GET_EDITED_LIST
+
+DELIMITER $$
+
+CREATE PROCEDURE GET_EDITED_LIST(IN receiverHandle NVARCHAR(250))
+BEGIN
+	SELECT * FROM messagesRecentlyEditedList WHERE messagesRecentlyEditedList.receiverHandle = receiverHandle;
+    DELETE FROM messagesRecentlyEditedList WHERE messagesRecentlyEditedList.receiverHandle = receiverHandle;
+END $$
