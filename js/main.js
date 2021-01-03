@@ -155,6 +155,11 @@ $(function() {
     });
 });
 
+function ShowMessage(message, isUserSender, isDelivered)
+{
+    return "<li><span>" + message + "</span><li>";
+}
+
 function LoadChat(contact)
 {
     let handle = contact["Handle"];
@@ -194,12 +199,12 @@ function LoadChat(contact)
 
                 for(let i = 0; i < receivedMsg.length + sentMsg.length; ++i) {
                     if(receivedIndex >= receivedMsg.length){
-                        receivedMsgHTML += "<li><span>" + sentIndex[sentIndex].Message + "</span><li>";
+                        receivedMsgHTML += ShowMessage(sentIndex[sentIndex].Message, false, true);
                         sentIndex++;
                     }
                     else if(sentIndex >= sentMsg.length)
                     {
-                        receivedMsgHTML += "<li><span>" + receivedMsg[receivedIndex].Message + "</span><li>";
+                        receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex].Message, true, true);
                         receivedIndex++;
                     }
                     else
@@ -208,12 +213,12 @@ function LoadChat(contact)
                         senDate = new Date(sentMsg[sentIndex].dateTime);
                         if(recDate < senDate)
                         {
-                            receivedMsgHTML += "<li><span>" + receivedMsg[receivedIndex].Message + "</span><li>";
+                            receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex].Message, false, true);
                             receivedIndex++;
                         }
                         else
                         {
-                            receivedMsgHTML += "<li><span>" + sentIndex[sentIndex].Message + "</span><li>";
+                            receivedMsgHTML += ShowMessage(sentIndex[sentIndex].Message, true, true);
                             sentIndex++;
                         }
                     }  
@@ -221,7 +226,7 @@ function LoadChat(contact)
                 }
 
                 for(let i = 0; i < undeliveredMsg.length; ++i) {
-                    receivedMsgHTML += "<li><span>" + undeliveredMsg[i].Message + "</span><li>";
+                    receivedMsgHTML += ShowMessage(undeliveredMsg[i].Message, true, false);
                 }
 
                 newChatWrapper.find(".chat-window-body").html(receivedMsgHTML);
