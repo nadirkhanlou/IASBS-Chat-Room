@@ -90,6 +90,7 @@ $(function() {
                 {
                     let user = result["user"];
                     ShowUserInfo();
+                    $('.user-contacts-wrapper, .user-settings-wrapper').slideToggle();
                 }
                 else
                 {
@@ -120,8 +121,9 @@ function ShowUserInfo() {
             {
                 let user = result["user"];
                 console.log(user);
-                document.getElementById('user-info-handle').innerHTML = user["Handle"];
-                document.getElementById('user-info-full-name').innerHTML = user["FullName"];
+                $("#user-info-handle").html(user["Handle"]);
+                $("#user-info-full-name").html(user["FullName"]);
+                
             }
             else
             {
