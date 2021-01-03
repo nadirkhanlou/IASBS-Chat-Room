@@ -157,7 +157,11 @@ $(function() {
 
 function ShowMessage(message, isUserSender, isDelivered)
 {
-    return "<li><span>" + message + "</span><li>";
+    /*
+    message properties:
+	    SenderHandle, ReceiverHandle, Message, MessageType, DateTime, MessageId,
+    */
+    return "<li><span>" + message.Message + "</span><span>" + DateTime + "</span><li>";
 }
 
 function LoadChat(contact)
@@ -199,12 +203,12 @@ function LoadChat(contact)
 
                 for(let i = 0; i < receivedMsg.length + sentMsg.length; ++i) {
                     if(receivedIndex >= receivedMsg.length){
-                        receivedMsgHTML += ShowMessage(sentIndex[sentIndex].Message, false, true);
+                        receivedMsgHTML += ShowMessage(sentIndex[sentIndex], false, true);
                         sentIndex++;
                     }
                     else if(sentIndex >= sentMsg.length)
                     {
-                        receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex].Message, true, true);
+                        receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex], true, true);
                         receivedIndex++;
                     }
                     else
@@ -213,12 +217,12 @@ function LoadChat(contact)
                         senDate = new Date(sentMsg[sentIndex].dateTime);
                         if(recDate < senDate)
                         {
-                            receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex].Message, false, true);
+                            receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex], false, true);
                             receivedIndex++;
                         }
                         else
                         {
-                            receivedMsgHTML += ShowMessage(sentIndex[sentIndex].Message, true, true);
+                            receivedMsgHTML += ShowMessage(sentIndex[sentIndex], true, true);
                             sentIndex++;
                         }
                     }  
@@ -226,7 +230,7 @@ function LoadChat(contact)
                 }
 
                 for(let i = 0; i < undeliveredMsg.length; ++i) {
-                    receivedMsgHTML += ShowMessage(undeliveredMsg[i].Message, true, false);
+                    receivedMsgHTML += ShowMessage(undeliveredMsg[i], true, false);
                 }
 
                 newChatWrapper.find(".chat-window-body").html(receivedMsgHTML);
