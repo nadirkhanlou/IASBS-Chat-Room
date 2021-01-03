@@ -77,6 +77,33 @@ CREATE TABLE IF NOT EXISTS `messages` (
 
 SHOW WARNINGS;
 
+DROP TABLE IF EXISTS `messages` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `new_messages` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `reciever_id`	INT NOT NULL,
+    `sender_id` INT NOT NULL,
+    `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
+    `message` LONGTEXT,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME,
+    `deleted_at` DATETIME,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_new_messages_users2`
+    FOREIGN KEY (`reciever_id`)
+    REFERENCES `users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_new_messages_users1`
+    FOREIGN KEY (`sender_id`)
+    REFERENCES `users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+    ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
 -- -----------------------------------------------------
 -- Table `reports`
 -- -----------------------------------------------------
@@ -274,10 +301,23 @@ CREATE PROCEDURE SENDMESSAGE(IN FROMUSER VARCHAR(250), IN TOUSER VARCHAR(250), I
 BEGIN
 	SET @users_id = (SELECT id FROM users WHERE FROMUSER = users.handle);
 	SET @participants_id = (SELECT id FROM users WHERE TOUSER = users.handle);
-	INSERT INTO MESSAGES(state, sender_id, reciever_id, message, message_type, created_at)
-	VALUES('1', @users_id, @participants_id, MSG, MSGTYPE, NOW());
-    SELECT NOW();
+	INSERT INTO NEW_MESSAGES(sender_id, reciever_id, message, message_type, created_at)
+	VALUES(@users_id, @participants_id, MSG, MSGTYPE, NOW());
+    SELECT NOW() as created_at;
 END $$
+
+DELIMITER $$
+
+CREATE PROCEDURE FETCH_NEW_MESSAGES(IN RECEIVER VARCHAR(250))
+BEGIN
+	SET @users_id = (SELECT id FROM users WHERE RECEIVER = users.handle);
+	SELECT message, message_type as messageType, participants_id as senderId, created_at as messageDateTime, id as messageId FROM
+    new_messages where participants_id = @users_id;
+	INSERT INTO MESSAGES(state, sender_id, participants_id, message, message_type, created_at)
+	VALUES('1', senderId, @users_id, MSG, messageType, messageDateTime);
+    DELETE FROM MESSAGES WHERE id = messageId;
+END $$
+
 
 DELIMITER ;
 
