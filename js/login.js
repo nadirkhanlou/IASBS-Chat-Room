@@ -127,7 +127,7 @@ function CreateAccount() {
         async: !1,
         data: { fullName: fullName, handle: handle, phoneNumber: phoneNumber, password: password},
         success: function (resultString) {
-            result = JSON.parse(resultString);
+            let result = JSON.parse(resultString);
             if(result["success"])
             {
                 $('form').animate({height: "toggle", opacity: "toggle"}, "slow");

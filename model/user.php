@@ -70,7 +70,7 @@ class user
 	
 	static function IsPhoneNumberExist($phoneNumber)
 	{
-		$query = "CALL GET_USER_BY_PHONE({$handle})";
+		$query = "CALL GET_USER_BY_PHONE({$phoneNumber})";
 		$result = database::ExecuteQuery($query);
         return mysqli_num_rows($result) > 0;
 	}

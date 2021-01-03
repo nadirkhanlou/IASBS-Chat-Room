@@ -122,9 +122,6 @@ $(function() {
         let receiverHandle = "@" + handleSubStr;
         let messageText = $('#chat-window-' + handleSubStr + ' .chat-window-input input').val();
 
-        console.log(receiverHandle);
-        console.log(messageText);
-
         $.ajax({
             url: 'services/sendMessage.php',
             type: 'POST',
@@ -134,9 +131,12 @@ $(function() {
                 let result = JSON.parse(resultString);
                 if(result["success"])
                 {
-                    let dateTime = result["dateTime"];
-                    console.log(dateTime);
-                    
+                    let message = result["message"];
+                    let chatWrapper = $('#chat-window-' + handleSubStr);
+                    let msgHTML = "";
+                    msgHTML += ShowMessage(message, true, false);
+                    chatWrapper.find(".chat-window-body").append(msgHTML);
+                    $('#chat-window-' + handleSubStr + ' .chat-window-input input').val("");
                 }
                 else
                 {
@@ -161,7 +161,7 @@ function ShowMessage(message, isUserSender, isDelivered)
     message properties:
 	    SenderHandle, ReceiverHandle, Message, MessageType, DateTime, MessageId,
     */
-    return "<li><span>" + message.Message + "</span><span>" + DateTime + "</span><li>";
+    return "<li><span>" + message.Message + "</span> <span>" + message.DateTime + "</span><li>";
 }
 
 function LoadChat(contact)
@@ -191,15 +191,9 @@ function LoadChat(contact)
                 let receivedIndex = 0;
                 let sentIndex = 0;
 
-                function sortByDate(a, b){
-                    aDate = new Date(a.dateTime);
-                    bDate = new Date(b.dateTime);
-                    return new Date(a.date) - new Date(b.date);
-                }
-
-                receivedMsg.sort(sortByDate);
-                sentMsg.sort(sortByDate);
-                undeliveredMsg.sort(sortByDate);
+                receivedMsg.sort(SortByDate);
+                sentMsg.sort(SortByDate);
+                undeliveredMsg.sort(SortByDate);
 
                 for(let i = 0; i < receivedMsg.length + sentMsg.length; ++i) {
                     if(receivedIndex >= receivedMsg.length){
@@ -247,6 +241,12 @@ function LoadChat(contact)
     });
 }
 
+function SortByDate(a, b){
+    aDate = new Date(a.dateTime);
+    bDate = new Date(b.dateTime);
+    return new Date(a.date) - new Date(b.date);
+}
+
 function ShowUserInfo() {
     $.ajax({
         url: 'services/getUserInfo.php',
@@ -274,27 +274,37 @@ function ShowUserInfo() {
     });
 }
 
-// window.setInterval(function() {
-    
-    
-//     $.ajax({
-//         url: 'services/sendMessage.php',
-//         type: 'GET',
-//         async: !1,
-//         data: {},
-//         success: function (resultString) {
-//             result = JSON.parse(resultString);
-//             if(result["success"])
-//             {
-//             }
-//             else
-//             {
-//                 console.log(result["errorMessage"]);
-//             }
-//         },
-//         error: function(XMLHttpRequest, textStatus, errorThrown) { 
-//             console.log("Status: " + textStatus);
-//             console.log("Error: " + errorThrown); 
-//         }
-//     });
-// }, 1000);
+window.setInterval(function() {
+    $.ajax({
+        url: 'services/getNewMessages.php',
+        type: 'GET',
+        async: !1,
+        data: {},
+        success: function (resultString) {
+            result = JSON.parse(resultString);
+            if(result["success"])
+            {
+                let messages = result["messages"];
+                messages.sort(SortByDate);
+
+                for(let i = 0; i < messages.length; ++i)
+                {       
+                    let senderHandle = messages[i].SenderHandle;
+                    let handleSubStr = senderHandle.substr(1, senderHandle.length - 1);
+                    let senderChatWrapper = $('#chat-window-' + handleSubStr);
+                    let msgHTML = "";
+                    msgHTML += ShowMessage(messages[i], false, true);
+                    senderChatWrapper.find(".chat-window-body").append(msgHTML);
+                }
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
+}, 1000);

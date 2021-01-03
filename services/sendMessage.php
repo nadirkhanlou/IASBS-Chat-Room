@@ -11,9 +11,11 @@ if(isset($_REQUEST['receiverHandle']))
     {
         $senderHandle = unserialize($_SESSION['USER'])->Handle;
         $message = new message($senderHandle, $_REQUEST['receiverHandle'], $_REQUEST['messageText']); 
-        if($message->SendMessage())
+        $messageId = $message->SendMessage();
+        if($messageId)
         {
-            $result['dateTime'] = $message->GetDateTime();
+            $aMessage = new accessibleMessage($senderHandle, $_REQUEST['receiverHandle'], $_REQUEST['messageText'], 'text', $message->GetDateTime(), $messageId);
+            $result['message'] = $aMessage;
         }
         else
         {

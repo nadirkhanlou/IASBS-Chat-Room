@@ -13,7 +13,7 @@ class accessibleMessage
 
 	function __construct($senderHandle, $receiverHandle, $message, $messageType, $dateTime, $messageId)
 	{
-		$this->senderHandle = $senderHandle;
+		$this->SenderHandle = $senderHandle;
 		$this->ReceiverHandle = $receiverHandle;
 		$this->Message = $message;
 		$this->MessageType = $messageType;
@@ -53,8 +53,9 @@ class message
 	
 			if(mysqli_num_rows($result) > 0)
 			{
-				$this->dateTime = $result->fetch_array()['created_at'];
-				return true;
+				$row = $result->fetch_array();
+				$this->dateTime = $row['createdAt'];
+				return $row['createdMessageId'];
 			}
 			else
 			{

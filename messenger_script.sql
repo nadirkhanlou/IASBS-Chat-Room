@@ -303,7 +303,7 @@ BEGIN
 	SET @participants_id = (SELECT id FROM users WHERE TOUSER = users.handle);
 	INSERT INTO NEW_MESSAGES(sender_id, reciever_id, message, message_type, created_at)
 	VALUES(@users_id, @participants_id, MSG, MSGTYPE, NOW());
-    SELECT NOW() as created_at;
+    SELECT NOW() as createdAt, LAST_INSERT_ID() as createdMessageId;
 END $$
 
 drop PROCEDURE FETCH_NEW_MESSAGES
