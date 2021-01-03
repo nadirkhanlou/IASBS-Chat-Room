@@ -306,16 +306,18 @@ BEGIN
     SELECT NOW() as created_at;
 END $$
 
+drop PROCEDURE FETCH_NEW_MESSAGES
+
 DELIMITER $$
 
 CREATE PROCEDURE FETCH_NEW_MESSAGES(IN RECEIVER VARCHAR(250))
 BEGIN
 	SET @users_id = (SELECT id FROM users WHERE RECEIVER = users.handle);
-	SELECT message, message_type as messageType, participants_id as senderId, created_at as messageDateTime, id as messageId FROM
-    new_messages where participants_id = @users_id;
-	INSERT INTO MESSAGES(state, sender_id, participants_id, message, message_type, created_at)
-	VALUES('1', senderId, @users_id, MSG, messageType, messageDateTime);
-    DELETE FROM MESSAGES WHERE id = messageId;
+	SELECT message, new_messages.message_type as messageType, users.handle as senderHandle, new_messages.created_at as messageDateTime, new_messages.id as messageId FROM
+    new_messages, users where new_messages.reciever_id = @users_id && new_messages.sender_id = users.id;
+	#INSERT INTO MESSAGES(state, sender_id, participants_id, message, message_type, created_at)
+	#VALUES('1', senderId, @users_id, MSG, messageType, messageDateTime);
+    #DELETE FROM MESSAGES WHERE id = messageId;
 END $$
 
 

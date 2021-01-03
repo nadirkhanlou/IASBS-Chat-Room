@@ -2,6 +2,27 @@
 require_once dirname(__FILE__)."/../database.php";
 require_once dirname(__FILE__)."/user.php";
 
+class accessibleMessage
+{
+	public $SenderHandle;
+	public $ReceiverHandle;
+	public $Message;
+	public $MessageType;
+	public $DateTime;
+	public $MessageId;
+
+	function __construct($senderHandle, $receiverHandle, $message, $messageType, $dateTime, $messageId)
+	{
+		$this->senderHandle = $senderHandle;
+		$this->ReceiverHandle = $receiverHandle;
+		$this->Message = $message;
+		$this->MessageType = $messageType;
+		$this->DateTime = $dateTime;
+		$this->MessageId = $messageId;
+	}
+
+}
+
 class message
 {
 	private $senderHandle;
@@ -46,6 +67,31 @@ class message
 	function IsDelivered()
 	{
 		return !is_null($dataTime);
+	}
+
+	//static methods
+
+	static function GetNewMessages($handle)
+	{
+		if(user::IsHandleExist($handle))
+		{
+
+			$query = "CALL FETCH_NEW_MESSAGES('{$handle}')";
+			$result = database::ExecuteQuery($query);
+	
+			if(!$result)
+				return false;
+
+			$rows = $result->fetch_all(MYSQLI_ASSOC);
+			$retVal = [];
+			for ($i = 0; $i < count($rows); ++$i) {
+				$contact = new accessibleMessage($rows[$i]['senderHandle'], $handle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
+				array_push($retVal, $contact);
+			}
+				
+			return $retVal;
+		}
+		return false;
 	}
 }
 
