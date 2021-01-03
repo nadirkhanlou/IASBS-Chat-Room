@@ -54,13 +54,13 @@ DROP TABLE IF EXISTS `messages` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `messages` (
     `id` INT NOT NULL,
-    `guid` VARCHAR(100) NOT NULL DEFAULT '',
+    `status` VARCHAR(2) NOT NULL,
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
     `message` LONGTEXT NOT NULL DEFAULT '',
     `created_at` DATETIME NOT NULL,
-    `deleted_at` DATETIME NOT NULL,
+    `deleted_at` DATETIME NOT NULL  DEFAULT '',
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_messages_users2`
     FOREIGN KEY (`reciever_id`)
@@ -126,32 +126,6 @@ CREATE TABLE IF NOT EXISTS `block_list` (
 
 SHOW WARNINGS;
 
--- -----------------------------------------------------
--- Table `deleted_messages`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `deleted_messages` ;
-
-SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `deleted_messages` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `messages_id` INT NOT NULL,
-    `users_id` INT NOT NULL,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_deleted_messages_messages1`
-    FOREIGN KEY (`messages_id`)
-    REFERENCES `messages` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-    CONSTRAINT `fk_deleted_messages_users1`
-    FOREIGN KEY (`users_id`)
-    REFERENCES `users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
-
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `activities`
@@ -281,7 +255,7 @@ DROP PROCEDURE EDITPROFILE
 DELIMITER $$
 CREATE PROCEDURE EDITPROFILE(IN USEROLD VARCHAR(255),IN USERNEW VARCHAR(255), IN PASS VARCHAR(255), IN FN VARCHAR(150))
 BEGIN
-UPDATE users SET handle = USERNEW, password = PASS, full_name = FN WHERE handle = USEROLD;
+UPDATE users SET handle = USERNEW, password = PASS, full_name = FN, updated_at = NOW() WHERE handle = USEROLD;
 END $$
 DELIMITER ;
 
@@ -309,3 +283,30 @@ DELIMITER ;
 CALL BLOCKUSER('WWW', 'DOD');
 
 ------------------------------------------------------------------------------------------
+
+DELIMITER $$
+
+CREATE PROCEDURE SENDMESSAGE(IN FROMUSER VARCHAR(300), IN TOUSER VARCHAR(300), IN MSG LONGTEXT, IN MSGTYPE VARCHAR(20))
+BEGIN
+	INSERT INTO MESSAGES(status, sender_id, reciever_id, message, message_type, created_at)
+	VALUES('1', FROMUSER, TOUSER, MSG, MSGTYPE, NOW());
+END $$
+
+DELIMITER ;
+
+CALL SENDMESSAGE('www', 'ddd', 'hello');
+
+------------------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE DELETEMESSAGE(IN MID INT)
+BEGIN
+SET
+UPDATE messages SET status = '2' WHERE messages.id = MID;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
+END $$
+
+DELIMITER ;
+
+CALL DELETEMESSAGE(1);
+
+-------------------------------------------------------------------------------------------
