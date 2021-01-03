@@ -53,8 +53,8 @@ DROP TABLE IF EXISTS `messages` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `messages` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `state` VARCHAR(2) NOT NULL,
+    `id` INT NOT NULL,
+    `state` VARCHAR(2) NOT NULL default '1',
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
@@ -312,14 +312,45 @@ DELIMITER $$
 
 CREATE PROCEDURE FETCH_NEW_MESSAGES(IN RECEIVER VARCHAR(250))
 BEGIN
-	SET @users_id = (SELECT id FROM users WHERE RECEIVER = users.handle);
-	SELECT message, new_messages.message_type as messageType, users.handle as senderHandle, new_messages.created_at as messageDateTime, new_messages.id as messageId FROM
-    new_messages, users where new_messages.reciever_id = @users_id && new_messages.sender_id = users.id;
-	#INSERT INTO MESSAGES(state, sender_id, participants_id, message, message_type, created_at)
-	#VALUES('1', senderId, @users_id, MSG, messageType, messageDateTime);
-    #DELETE FROM MESSAGES WHERE id = messageId;
+	SET @user_id = (SELECT id FROM users WHERE RECEIVER = users.handle);
+    DROP TABLE IF EXISTS newmsg;
+    CREATE TEMPORARY TABLE newmsg
+	AS
+	(SELECT message, new_messages.message_type as messageType, new_messages.reciever_id as receiverId, users.id as senderId, users.handle as senderHandle, new_messages.created_at as messageDateTime, new_messages.id as messageId FROM
+    new_messages, users where new_messages.reciever_id = @user_id && new_messages.sender_id = users.id);
+	INSERT INTO MESSAGES(id, sender_id, reciever_id, message, message_type, created_at)
+	SELECT messageId, senderId, receiverId, message, messageType, messageDateTime FROM newmsg;
+    DELETE FROM new_messages WHERE id in (SELECT messageId FROM newmsg);
+    SELECT message, messageType, senderHandle, messageDateTime, messageId FROM newmsg;
 END $$
 
+drop PROCEDURE FETCH_OLD_MESSAGES
+
+DELIMITER $$
+
+CREATE PROCEDURE FETCH_OLD_MESSAGES(IN HANDLE VARCHAR(250), IN CONTACT_HANDLE VARCHAR(250))
+BEGIN
+	SET @user_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+    SET @participants_id = (SELECT id FROM users WHERE CONTACT_HANDLE = users.handle);
+    
+	SELECT message, message_type as messageType, created_at as messageDateTime, messages.id as messageId FROM
+    messages WHERE (reciever_id = @user_id && sender_id = @participants_id);
+    
+END $$
+
+drop PROCEDURE FETCH_NOT_DELIVERED_MESSAGES
+
+DELIMITER $$
+
+CREATE PROCEDURE FETCH_NOT_DELIVERED_MESSAGES(IN HANDLE VARCHAR(250), IN CONTACT_HANDLE VARCHAR(250))
+BEGIN
+	SET @user_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+    SET @participants_id = (SELECT id FROM users WHERE CONTACT_HANDLE = users.handle);
+    
+	SELECT message, message_type as messageType, created_at as messageDateTime, NEW_MESSAGES.id as messageId FROM
+    NEW_MESSAGES WHERE (reciever_id = @participants_id && sender_id = @user_id);
+    
+END $$
 
 DELIMITER ;
 

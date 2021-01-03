@@ -36,23 +36,25 @@ $(function() {
             async: !1,
             data: {'contacts': 1},
             success: function (resultString) {
-                result = JSON.parse(resultString);
+                let result = JSON.parse(resultString);
                 if(result["success"])
                 {
                     let contacts = result["users"]["contacts"];
                     let blocked = result["users"]["blocked"];
     
-                    let contactsListInner = "";
+                    let contactsListHTML = "";
                     for(let i = 0; i < contacts.length; ++i)
                     {
-                        contactsListInner += `<li><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
+                        contactsListHTML += `<li><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
+                        LoadChat(contacts[i]);
+                        
                     }
                     for(let i = 0; i < blocked.length; ++i)
                     {
-                        contactsListInner += `<li class="contact-blocked"><span>${blocked[i]['Handle']}</span><span>${blocked[i]['FullName']}</span></li>\n`;
+                        contactsListHTML += `<li class="contact-blocked"><span>${blocked[i]['Handle']}</span><span>${blocked[i]['FullName']}</span></li>\n`;
                     }
-                    $('.user-contacts-list').html(contactsListInner);
-    
+                    $('.user-contacts-list').html(contactsListHTML);
+
                     console.log(contacts);
                 }
                 else
@@ -69,7 +71,12 @@ $(function() {
 
     $('.user-contacts-list').on('click', 'li span:first-of-type', function() {
         let contactHandle = $(this).html();
+        contactHandleSubStr = contactHandle.substr(1, contactHandle.length - 1);
         $('.chat-window-header').html(contactHandle);
+        
+        $(".chat-window-wrapper").hide();
+        $(".chat-window-wrapper#chat-window-" + contactHandleSubStr).show();
+        
     });
 
     $('#user-setting-save-changes-button').on('click', function() {
@@ -109,15 +116,22 @@ $(function() {
     });
 
     $(".chat-window-input button").on('click', function() {
-        let receiverHandle = $('.chat-window-header').html();
-        let messageText = $('.chat-window-input input').val();
+        
+        handleSubStr = $(this).attr('id');
+
+        let receiverHandle = "@" + handleSubStr;
+        let messageText = $('#chat-window-' + handleSubStr + ' .chat-window-input input').val();
+
+        console.log(receiverHandle);
+        console.log(messageText);
+
         $.ajax({
             url: 'services/sendMessage.php',
-            type: 'GET',
+            type: 'POST',
             async: !1,
             data: {'receiverHandle': receiverHandle, 'messageText': messageText},
             success: function (resultString) {
-                result = JSON.parse(resultString);
+                let result = JSON.parse(resultString);
                 if(result["success"])
                 {
                     let dateTime = result["dateTime"];
@@ -135,16 +149,102 @@ $(function() {
             }
         });
     });
+
+    $('.right-side-wrapper').ready(function() {
+
+    });
 });
+
+function LoadChat(contact)
+{
+    let handle = contact["Handle"];
+    let handleSubStr = handle.substr(1, handle.length - 1);
+    $(".chat-window-wrapper#chat-window-empty").clone(true).appendTo(".right-side-wrapper");
+    let newChatWrapper = $(".chat-window-wrapper:last-child");
+    newChatWrapper.attr("id","chat-window-" + handleSubStr);
+    newChatWrapper.hide();
+    //newChatWrapper.find(".chat-window-input input").attr('id', handleSubStr);
+    newChatWrapper.find(".chat-window-input button").attr('id', handleSubStr);
+    $.ajax({
+        url: 'services/getOldMessages.php',
+        type: 'POST',
+        data: {'contactHandle': handle},
+        async: !1,
+        success: function (resultString) {
+            let result = JSON.parse(resultString);
+            if(result["success"])
+            {
+                let receivedMsg = result["messages"]["receivedMessages"];
+                let sentMsg = result["messages"]["sentMessages"];
+                let undeliveredMsg = result["messages"]["undeliveredMessages"];
+                newChatWrapper.find(".chat-window-body");
+                receivedMsgHTML = "";
+                let receivedIndex = 0;
+                let sentIndex = 0;
+
+                function sortByDate(a, b){
+                    aDate = new Date(a.dateTime);
+                    bDate = new Date(b.dateTime);
+                    return new Date(a.date) - new Date(b.date);
+                }
+
+                receivedMsg.sort(sortByDate);
+                sentMsg.sort(sortByDate);
+                undeliveredMsg.sort(sortByDate);
+
+                for(let i = 0; i < receivedMsg.length + sentMsg.length; ++i) {
+                    if(receivedIndex >= receivedMsg.length){
+                        receivedMsgHTML += "<li><span>" + sentIndex[sentIndex].Message + "</span><li>";
+                        sentIndex++;
+                    }
+                    else if(sentIndex >= sentMsg.length)
+                    {
+                        receivedMsgHTML += "<li><span>" + receivedMsg[receivedIndex].Message + "</span><li>";
+                        receivedIndex++;
+                    }
+                    else
+                    {
+                        recDate = new Date(receivedMsg[receivedIndex].dateTime);
+                        senDate = new Date(sentMsg[sentIndex].dateTime);
+                        if(recDate < senDate)
+                        {
+                            receivedMsgHTML += "<li><span>" + receivedMsg[receivedIndex].Message + "</span><li>";
+                            receivedIndex++;
+                        }
+                        else
+                        {
+                            receivedMsgHTML += "<li><span>" + sentIndex[sentIndex].Message + "</span><li>";
+                            sentIndex++;
+                        }
+                    }  
+                    
+                }
+
+                for(let i = 0; i < undeliveredMsg.length; ++i) {
+                    receivedMsgHTML += "<li><span>" + undeliveredMsg[i].Message + "</span><li>";
+                }
+
+                newChatWrapper.find(".chat-window-body").html(receivedMsgHTML);
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
+}
 
 function ShowUserInfo() {
     $.ajax({
         url: 'services/getUserInfo.php',
         type: 'GET',
         async: !1,
-        data: {'GetUser': 1},
         success: function (resultString) {
-            result = JSON.parse(resultString);
+            let result = JSON.parse(resultString);
             if(result["success"])
             {
                 let user = result["user"];
@@ -164,3 +264,28 @@ function ShowUserInfo() {
         }
     });
 }
+
+// window.setInterval(function() {
+    
+    
+//     $.ajax({
+//         url: 'services/sendMessage.php',
+//         type: 'GET',
+//         async: !1,
+//         data: {},
+//         success: function (resultString) {
+//             result = JSON.parse(resultString);
+//             if(result["success"])
+//             {
+//             }
+//             else
+//             {
+//                 console.log(result["errorMessage"]);
+//             }
+//         },
+//         error: function(XMLHttpRequest, textStatus, errorThrown) { 
+//             console.log("Status: " + textStatus);
+//             console.log("Error: " + errorThrown); 
+//         }
+//     });
+// }, 1000);

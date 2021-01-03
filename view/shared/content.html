@@ -10,7 +10,7 @@
             <i title="edit info" class="fas fa-edit fa-2x" id="user-overview-settings-button" style="float: right"></i>
         </div>
     </div>
-    <div class="user-contacts-wrapper" id="user-contacts-wrapper-div">
+    <div class="user-contacts-wrapper" id="chat-window">
         <div class="user-contacts-search-bar">
             <input type="text" placeholder="Search..">
         </div>
@@ -34,7 +34,7 @@
     </div>
 </div>
 <div class="right-side-wrapper">
-    <div class="chat-window-wrapper">
+    <div class="chat-window-wrapper" id="chat-window-empty">
         <div class="chat-window-header">
             <p style="float: left">This is where the recepient's info is shown</p>
             <i title="block" class="fas fa-ban fa-2x" style="float: right"></i>
@@ -48,7 +48,7 @@
         <div class="chat-window-input">
             <form>
                 <input type="text" placeholder="type a message">
-                <button type="button">send</button>
+                <button type="button" id="chat-send-button">send</button>
             </form>
         </div>
     </div>

@@ -93,6 +93,52 @@ class message
 		}
 		return false;
 	}
+
+	static function GetOldMessages($handle, $senderHandle)
+	{
+		if(user::IsHandleExist($handle))
+		{
+
+			$query = "CALL FETCH_OLD_MESSAGES('{$handle}', '{$senderHandle}')";
+			$result = database::ExecuteQuery($query);
+	
+			if(!$result)
+				return false;
+
+			$rows = $result->fetch_all(MYSQLI_ASSOC);
+			$retVal = [];
+			for ($i = 0; $i < count($rows); ++$i) {
+				$contact = new accessibleMessage($senderHandle, $handle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
+				array_push($retVal, $contact);
+			}
+				
+			return $retVal;
+		}
+		return false;
+	}
+
+	static function GetUnDeliveredMessages($handle, $contactHandle)
+	{
+		if(user::IsHandleExist($handle))
+		{
+
+			$query = "CALL FETCH_NOT_DELIVERED_MESSAGES('{$handle}', '{$contactHandle}')";
+			$result = database::ExecuteQuery($query);
+	
+			if(!$result)
+				return false;
+
+			$rows = $result->fetch_all(MYSQLI_ASSOC);
+			$retVal = [];
+			for ($i = 0; $i < count($rows); ++$i) {
+				$contact = new accessibleMessage($handle, $contactHandle, $rows[$i]['message'], $rows[$i]['messageType'], $rows[$i]['messageDateTime'], $rows[$i]['messageId']);
+				array_push($retVal, $contact);
+			}
+				
+			return $retVal;
+		}
+		return false;
+	}
 }
 
 ?>
