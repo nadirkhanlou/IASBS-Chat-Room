@@ -16,17 +16,21 @@ class message
 		$this->message = $message;
 		$this->dateTime = $dateTime;
 	}
+
+	function GetDateTime()
+	{
+		return strtotime($dateTime);
+	}
 	
 	function SendMessage()
 	{
 		if(user::IsHandleExist($this->receiverHandle))
 		{
-			
-			//store in database
-			$query = "";
+
+			$query = "CALL SENDMESSAGE('{$this->senderHandle}', '{$this->receiverHandle}', '{$this->message}', 'text')";
 			$result = database::ExecuteQuery($query);
 			
-			return true;
+			return !$result ? false : true;
 		}
 		return false;
 	}

@@ -42,7 +42,6 @@ $(function() {
                     let contacts = result["users"]["contacts"];
                     let blocked = result["users"]["blocked"];
     
-                    let contactsList = document.getElementsByClassName('user-contacts-list')[0];
                     let contactsListInner = "";
                     for(let i = 0; i < contacts.length; ++i)
                     {
@@ -52,7 +51,7 @@ $(function() {
                     {
                         contactsListInner += `<li class="contact-blocked"><span>${blocked[i]['Handle']}</span><span>${blocked[i]['FullName']}</span></li>\n`;
                     }
-                    contactsList.innerHTML = contactsListInner;
+                    $('.user-contacts-list').html(contactsListInner);
     
                     console.log(contacts);
                 }
@@ -68,8 +67,9 @@ $(function() {
         });
     });
 
-    $('.user-contacts-list li span:first-of-type').on('click', function() {
-        console.log("test");
+    $('.user-contacts-list').on('click', 'li span:first-of-type', function() {
+        let contactHandle = $(this).html();
+        $('#chat-window-header-info').html(contactHandle);
     });
 
     $('#user-setting-save-changes-button').on('click', function() {

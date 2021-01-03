@@ -54,14 +54,14 @@ DROP TABLE IF EXISTS `messages` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `messages` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `status` VARCHAR(2) NOT NULL,
+    `state` VARCHAR(2) NOT NULL,
     `reciever_id`	INT NOT NULL,
     `sender_id` INT NOT NULL,
     `message_type` ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
-    `message` LONGTEXT NOT NULL DEFAULT '',
+    `message` LONGTEXT,
     `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL DEFAULT '',
-    `deleted_at` DATETIME NOT NULL  DEFAULT '',
+    `updated_at` DATETIME,
+    `deleted_at` DATETIME,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_messages_users2`
     FOREIGN KEY (`reciever_id`)
@@ -150,25 +150,6 @@ SHOW WARNINGS;
 -- -----------------------------------------------------
 -- Table `attachments`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `attachments` ;
-
-SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `attachments` (
-    `id` INT NOT NULL,
-    `messages_id` INT NOT NULL,
-    `thumb_url` VARCHAR(45) NOT NULL,
-    `file_url` VARCHAR(45) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL,
-    `updated_at` DATETIME NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_attachments_messages1`
-    FOREIGN KEY (`messages_id`)
-    REFERENCES `messages` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
-
-SHOW WARNINGS;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -285,12 +266,16 @@ CALL BLOCKUSER('WWW', 'DOD');
 
 ------------------------------------------------------------------------------------------
 
+drop PROCEDURE SENDMESSAGE
+
 DELIMITER $$
 
-CREATE PROCEDURE SENDMESSAGE(IN FROMUSER VARCHAR(300), IN TOUSER VARCHAR(300), IN MSG LONGTEXT, IN MSGTYPE VARCHAR(20))
+CREATE PROCEDURE SENDMESSAGE(IN FROMUSER VARCHAR(250), IN TOUSER VARCHAR(250), IN MSG LONGTEXT, IN MSGTYPE VARCHAR(20))
 BEGIN
-	INSERT INTO MESSAGES(status, sender_id, reciever_id, message, message_type, created_at)
-	VALUES('1', FROMUSER, TOUSER, MSG, MSGTYPE, NOW());
+	SET @users_id = (SELECT id FROM users WHERE FROMUSER = users.handle);
+	SET @participants_id = (SELECT id FROM users WHERE TOUSER = users.handle);
+	INSERT INTO MESSAGES(state, sender_id, reciever_id, message, message_type, created_at)
+	VALUES('1', @users_id, @participants_id, MSG, MSGTYPE, NOW());
 END $$
 
 DELIMITER ;
