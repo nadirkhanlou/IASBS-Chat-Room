@@ -541,6 +541,9 @@ function GetEditedList() {
 
 function UpdateContacts()
 {
+    let searchedText = $(`.user-contacts-search-bar input`).val();
+
+
     $.ajax({
         url: 'services/contacts.php',
         type: 'GET',
@@ -549,12 +552,12 @@ function UpdateContacts()
         success: function (resultString) {
             let result = JSON.parse(resultString);
             if(result["success"])
-            {
+                {
 
                 let contacts = result["users"]["contacts"];
                 let blocked = result["users"]["blocked"];
                 let blockedBy = result["users"]["blockedBy"];
-
+    
                 let contactsListHTML = "";
                 for(let i = 0; i < contacts.length; ++i)
                 {
@@ -563,6 +566,15 @@ function UpdateContacts()
                     if ($(`.user-contacts-list #${handleSubStr}`).length <= 0) {
                         contactsListHTML += `<li id="${handleSubStr}"><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
                         LoadChat(contacts[i]);
+                    }
+
+                    if(handleSubStr.search(searchedText) != -1)
+                    {
+                        $(`.user-contacts-list #${handleSubStr}`).show();
+                    }
+                    else
+                    {
+                        $(`.user-contacts-list #${handleSubStr}`).hide();
                     }
                 }
                 for(let i = 0; i < blocked.length; ++i)
@@ -573,6 +585,15 @@ function UpdateContacts()
                         contactsListHTML += `<li class="contact-blocked" id="${handleSubStr}"></span><span>${blocked[i]['FullName']}</span></li>\n`;
                         LoadChat(blocked[i]);
                     }
+
+                    if(handleSubStr.search(searchedText) != -1)
+                    {
+                        $(`.user-contacts-list #${handleSubStr}`).show();
+                    }
+                    else
+                    {
+                        $(`.user-contacts-list #${handleSubStr}`).hide();
+                    }
                 }
                 for(let i = 0; i < blockedBy.length; ++i)
                 {
@@ -581,10 +602,10 @@ function UpdateContacts()
                     if ($(`.user-contacts-list #${handleSubStr}`).length > 0) {
                         $(`.user-contacts-list #${handleSubStr}`).remove();
                     }
-                    
+                        
                 }
                 $('.user-contacts-list').append(contactsListHTML);
-
+    
             }
             else
             {
