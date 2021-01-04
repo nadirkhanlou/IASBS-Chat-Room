@@ -3,11 +3,6 @@ var IsEditing = false;
 var EditingMessageId = 0;
 
 $(function() {
-    $('.user-settings-wrapper').hide();
-    $('#user-overview-settings-button').on('click', function() {
-        $('.user-contacts-wrapper, .user-settings-wrapper').slideToggle();
-    });
-
     $('#user-overview-logout-button').on('click', function() {
         $.ajax({
             url: 'services/logout.php',
@@ -129,35 +124,38 @@ $(function() {
     });
 
     $('#user-setting-save-changes-button').on('click', function() {
-        let fullName = document.getElementById("full-name").value;
-        let handle = document.getElementById("handle").value;
+        let fullName = document.getElementById("user-settings-full-name").value;
+        let handle = document.getElementById("user-settings-handle").value;
         let currentPassword = document.getElementById("current-password").value;
         let newPassword = document.getElementById("new-password").value;
         if(newPassword == "")
             newPassword = currentPassword;
-        $.ajax({
-            url: 'services/editInfo.php',
-            type: 'POST',
-            async: !1,
-            data: {'currentPassword': currentPassword, 'newFullName': fullName, 'newHandle': handle, 'newPassword': newPassword},
-            success: function (resultString) {
-                result = JSON.parse(resultString);
-                if(result["success"])
-                {
-                    let user = result["user"];
-                    ShowUserInfo();
-                    $('.user-contacts-wrapper, .user-settings-wrapper').slideToggle();
+
+        if (infoValidation['name'] && infoValidation['handle'] && infoValidation['phoneNum'] && infoValidation['password']) {
+            $.ajax({
+                url: 'services/editInfo.php',
+                type: 'POST',
+                async: !1,
+                data: {'currentPassword': currentPassword, 'newFullName': fullName, 'newHandle': handle, 'newPassword': newPassword},
+                success: function (resultString) {
+                    result = JSON.parse(resultString);
+                    if(result["success"])
+                    {
+                        let user = result["user"];
+                        ShowUserInfo();
+                        $('.user-contacts-wrapper, .user-settings-wrapper').slideToggle();
+                    }
+                    else
+                    {
+                        console.log(result["errorMessage"]);
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    console.log("Status: " + textStatus);
+                    console.log("Error: " + errorThrown); 
                 }
-                else
-                {
-                    console.log(result["errorMessage"]);
-                }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                console.log("Status: " + textStatus);
-                console.log("Error: " + errorThrown); 
-            }
-        });
+            });
+        }
     });
 
     $(".user-info").ready(function() {
