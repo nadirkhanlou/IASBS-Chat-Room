@@ -32,9 +32,9 @@ $(function() {
     $('#user-contacts-wrapper-div').ready(function() {
         $.ajax({
             url: 'services/contacts.php',
-            type: 'POST',
+            type: 'GET',
             async: !1,
-            data: {'contacts': 1},
+            data: {},
             success: function (resultString) {
                 let result = JSON.parse(resultString);
                 if(result["success"])
@@ -58,10 +58,13 @@ $(function() {
                         handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
 
                         contactsListHTML += `<li class="contact-blocked" id="${handleSubStr}"></span><span>${blocked[i]['FullName']}</span></li>\n`;
+                        LoadChat(blocked[i]);
                     }
                     $('.user-contacts-list').html(contactsListHTML);
 
-                    console.log(contacts);
+                    window.setInterval(function() {
+                        UpdateContacts();
+                    }, 1000);
                 }
                 else
                 {
@@ -388,6 +391,59 @@ function GetEditedList() {
             let result = JSON.parse(resultString);
             if(result["success"])
             {
+
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
+}
+
+function UpdateContacts()
+{
+    $.ajax({
+        url: 'services/contacts.php',
+        type: 'GET',
+        async: !1,
+        data: {},
+        success: function (resultString) {
+            let result = JSON.parse(resultString);
+            if(result["success"])
+            {
+
+                let contacts = result["users"]["contacts"];
+                let blocked = result["users"]["blocked"];
+
+                let contactsListHTML = "";
+                for(let i = 0; i < contacts.length; ++i)
+                {
+                    //$(selector).length 
+                    if (false) {
+                        let handleSubStr = contacts[i]['Handle'];
+                        handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
+
+                        contactsListHTML += `<li id="${handleSubStr}"><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
+                        LoadChat(contacts[i]);
+                    }
+                    
+                }
+                for(let i = 0; i < blocked.length; ++i)
+                {
+                    if (false) {
+                        let handleSubStr = blocked[i]['Handle'];
+                        handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
+
+                        contactsListHTML += `<li class="contact-blocked" id="${handleSubStr}"></span><span>${blocked[i]['FullName']}</span></li>\n`;
+                        LoadChat(blocked[i]);
+                    }
+                }
+                $('.user-contacts-list').append(contactsListHTML);
 
             }
             else
