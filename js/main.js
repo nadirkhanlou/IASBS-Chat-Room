@@ -250,7 +250,8 @@ function ShowMessage(message, isUserSender, isDelivered)
                                <span class="message-date-time">${message.DateTime}</span>
                                ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}" title="delete" id="${receiverHandle}" onclick="DeleteMessage(this.id, this.className)"></i>‌` : ``}
                                ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}" title="edit id="${receiverHandle}" onclick="EditMessage(this.id, this.className)></i>` : ``}
-                               <i class="fas fa-pencil-alt${message.MessageId}"></i>
+                               <i class="fas fa-pencil-alt ${message.MessageId}"></i>
+                               ${isDelivered ? `<i class="fas fa-check-double"></i>` : `<i class="fas fa-check"></i>`}
                            </span>
                        </div>
                    </div>`
