@@ -227,7 +227,23 @@ function ShowMessage(message, isUserSender, isDelivered)
     message properties:
 	    SenderHandle, ReceiverHandle, Message, MessageType, DateTime, MessageId,
     */
-    return "<li><span>" + message.Message + "</span> <span>" + message.DateTime + "</span><li>";
+    let divClass = isUserSender ? "\"sent-message\"" : "\"received-message\"";
+
+    messageElement = 
+                   `<div>
+                       <div class=${divClass}>
+                           <span class="message-id" style="display: none">${message.MessageId}</span>
+                           <span class="message-bubble">${message.Message}</span>
+                           <span>
+                               <span class="message-date-time">${message.DateTime}</span>
+                               ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}"></i>‌` : ``}
+                               ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}"></i>` : ``}
+                               <i class="fas fa-pencil-alt${message.MessageId}"></i>
+                           </span>
+                       </div>
+                   </div>`
+
+    return messageElement;
 }
 
 function LoadChat(contact)
