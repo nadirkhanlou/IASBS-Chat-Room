@@ -251,10 +251,9 @@ function ShowMessage(message, isUserSender, isDelivered)
                            <span class="message-bubble">${message.Message}</span>
                            <span class="message-container">
                                <span class="message-date-time">${message.DateTime}</span>
-                               ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}" title="delete" id="${receiverHandle}" onclick="DeleteMessage(this.id, this.className)"></i>‌` : ``}
-                               ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}" title="edit" id="${receiverHandle}" onclick="EditMessage(this.id, this.className)></i>` : ``}
-                               <i class="fas fa-pencil-alt ${message.MessageId}"></i>
-                               ${isDelivered ? `<i class="fas fa-check-double"></i>` : `<i class="fas fa-check"></i>`}
+                               ${isUserSender ? `<i class="fas fa-trash-alt ${message.MessageId}" title="delete" id="${receiverHandle}" onclick="DeleteMessage(this.id, this.className)"></i>‌` : ``}
+                               ${isUserSender ? `<i class="fas fa-pencil-alt ${message.MessageId}" title="edit" id="${receiverHandle}" onclick="EditMessage(this.id, this.className)"></i>` : ``}
+                               ${isUserSender ? `${isDelivered ? `<i class="fas fa-check-double" title="delivered"></i>` : `<i class="fas fa-check" title="sent"></i>`}` : ``}
                            </span>
                        </div>
                    </div>`
