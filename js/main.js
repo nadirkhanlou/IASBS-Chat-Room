@@ -162,6 +162,10 @@ $(function() {
         ShowUserInfo();
     });
 
+    $(".chat-window-input").submit(function (e) {
+        e.preventDefault();
+    });
+    
     $(".chat-window-input button").on('click', function() {
         
         handleSubStr = $(this).attr('id');
