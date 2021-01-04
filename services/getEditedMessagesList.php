@@ -7,7 +7,7 @@ $result = array("success" => true, "errorMessage" => "", "editedList" => "");
 if(isset($_SESSION["USER"]))
 {
     $editedMessages = message::GetRecentEditedMessages(unserialize($_SESSION["USER"])->Handle);
-    if(editedMessages)
+    if($editedMessages)
     {
         $result["editedList"] = $editedMessages;
     }
