@@ -162,6 +162,10 @@ $(function() {
         ShowUserInfo();
     });
 
+    $(".chat-window-input").submit(function (e) {
+        e.preventDefault();
+    });
+    
     $(".chat-window-input button").on('click', function() {
         
         handleSubStr = $(this).attr('id');
@@ -309,8 +313,8 @@ function LoadChat(contact)
                     }
                     else
                     {
-                        recDate = new Date(receivedMsg[receivedIndex].dateTime);
-                        senDate = new Date(sentMsg[sentIndex].dateTime);
+                        recDate = new Date(receivedMsg[receivedIndex].DateTime);
+                        senDate = new Date(sentMsg[sentIndex].DateTime);
                         if(recDate < senDate)
                         {
                             receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex], false, true);
@@ -344,9 +348,9 @@ function LoadChat(contact)
 }
 
 function SortByDate(a, b){
-    aDate = new Date(a.dateTime);
-    bDate = new Date(b.dateTime);
-    return new Date(a.date) - new Date(b.date);
+    aDate = new Date(a.DateTime);
+    bDate = new Date(b.DateTime);
+    return aDate - bDate;
 }
 
 function DeleteMessage(receiverHandleSubStr, className) {
