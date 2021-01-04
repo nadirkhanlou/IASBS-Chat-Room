@@ -281,12 +281,12 @@ function LoadChat(contact)
 
                 for(let i = 0; i < receivedMsg.length + sentMsg.length; ++i) {
                     if(receivedIndex >= receivedMsg.length){
-                        receivedMsgHTML += ShowMessage(sentIndex[sentIndex], false, true);
+                        receivedMsgHTML += ShowMessage(sentIndex[sentIndex], true, true);
                         sentIndex++;
                     }
                     else if(sentIndex >= sentMsg.length)
                     {
-                        receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex], true, true);
+                        receivedMsgHTML += ShowMessage(receivedMsg[receivedIndex], false, true);
                         receivedIndex++;
                     }
                     else
@@ -300,7 +300,7 @@ function LoadChat(contact)
                         }
                         else
                         {
-                            receivedMsgHTML += ShowMessage(receivedMsg[sentIndex], true, true);
+                            receivedMsgHTML += ShowMessage(sentMsg[sentIndex], true, true);
                             sentIndex++;
                         }
                     }  
