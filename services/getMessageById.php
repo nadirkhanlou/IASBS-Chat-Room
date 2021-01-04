@@ -3,16 +3,17 @@ require_once dirname(__FILE__)."/../model/user.php";
 
 if(isset($_REQUEST['messageId']))
 {
-    $result = array("success" => true, "errorMessage" => "");
+    $result = array("success" => true, "errorMessage" => "", "message" => null);
 
-    if(true)
+    $message = message::GetMessage($_REQUEST['messageId']);
+    if($message)
     {
-        
+        $result["message"] = $message;
     }
     else
     {
         $result["success"] = false;
-        $result["errorMessage"] = "";
+        $result["errorMessage"] = "Couldn't get message";
     }
 
     echo json_encode($result);

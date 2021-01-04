@@ -142,12 +142,6 @@ class user
 		}
 		return $retVal;
 	}
-
-	function GetMessages()
-	{
-		$query = "";
-		$result = database::ExecuteQuery($query);
-	}
 	
 	function SendMessage($receiverHandle, $messageText)
 	{
@@ -155,9 +149,17 @@ class user
 		return $msg.SendMessage();
 	}
 
-	function Serialize()
+	function BlockUser($contactHandle)
 	{
-		
+		if(user::IsHandleExist($this->handle) && user::IsHandleExist($contactHandle))
+		{
+
+			$query = "CALL BLOCK_USER('{$this->handle}', '{$contactHandle}')";
+			$result = database::ExecuteQuery($query);
+
+			return $result;
+		}
+		return false;
 	}
 }
 

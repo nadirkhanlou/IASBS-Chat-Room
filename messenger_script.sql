@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `block_list` (
     FOREIGN KEY (`users_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON UPDATE NO ACTION,
     CONSTRAINT `fk_blocks_users2`
     FOREIGN KEY (`participants_id`)
     REFERENCES `users` (`id`)
@@ -290,18 +290,20 @@ CALL EDITPROFILE('WWW','WWW','WWW','WWW','WWW');
 
 ----------------------------------------------------------------------------------------
 
+DROP PROCEDURE BLOCK_USER
+
 DELIMITER $$
 CREATE PROCEDURE BLOCK_USER
 	(
-    IN HANDLE NCHAR(11),
-    IN TO_BE_BLOCKED_HANDLE NCHAR(11))
+    IN HANDLE NVARCHAR(250),
+    IN TO_BE_BLOCKED_HANDLE NVARCHAR(250))
 BEGIN
 	SET @users_id = (SELECT id FROM users WHERE HANDLE = users.handle);
-	SET @participants_id = (SELECT id FROM users WHERE HANDLE = users.handle);
-    IF EXISTS(SELECT * FROM block_list WHERE @users_id = users_id && @participants_id = participants_id)
+	SET @participants_id = (SELECT id FROM users WHERE TO_BE_BLOCKED_HANDLE = users.handle);
+    IF NOT EXISTS(SELECT * FROM block_list WHERE @users_id = users_id && @participants_id = participants_id)
     THEN
-	INSERT INTO block_list (users_id, participants_id, created_at) 
-	VALUES (@users_id, @participants_id, NOW());
+		INSERT INTO block_list (users_id, participants_id, created_at) 
+		VALUES (@users_id, @participants_id, NOW());
     END IF;
 END$$
 
@@ -355,6 +357,8 @@ BEGIN
     messages WHERE (reciever_id = @user_id && sender_id = @participants_id) && messages.state != '2';
     
 END $$
+
+DELIMITER ;
 
 drop PROCEDURE FETCH_NOT_DELIVERED_MESSAGES
 
@@ -440,3 +444,16 @@ BEGIN
 	SELECT * FROM messagesRecentlyEditedList WHERE messagesRecentlyEditedList.receiverHandle = receiverHandle;
     DELETE FROM messagesRecentlyEditedList WHERE messagesRecentlyEditedList.receiverHandle = receiverHandle;
 END $$
+
+DELIMITER ;
+
+DROP PROCEDURE GET_MESSAGE
+
+DELIMITER $$
+
+CREATE PROCEDURE GET_MESSAGE(IN id INT)
+BEGIN
+	SELECT * FROM messages WHERE messages.id = id && messages.state != '2';
+END $$
+
+DELIMITER ;

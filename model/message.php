@@ -157,6 +157,58 @@ class message
 		return false;
 	}
 
+
+	static function EditMessage($receiverHandle, $messageId, $message)
+	{
+		if(user::IsHandleExist($receiverHandle) && message::IsMessageExist($messageId))
+		{
+
+			$query = "CALL EDITMESSAGE('{$messageId}', '{$message}', '{$receiverHandle}'";
+			$result = database::ExecuteQuery($query);
+
+			return $result;
+		}
+		return false;
+	}
+
+	static function DeleteMessage($receiverHandle, $messageId)
+	{
+		if(user::IsHandleExist($receiverHandle) && message::IsMessageExist($messageId))
+		{
+
+			$query = "CALL DELETEMESSAGE('{$messageId}', '{$receiverHandle}')";
+			$result = database::ExecuteQuery($query);
+
+			return $result;
+		}
+		return false;
+	}
+
+	static function IsMessageExist($messageId)
+	{
+		$query = "CALL GET_MESSAGE('{$messageId}', '{$receiverHandle}')";
+		$result = database::ExecuteQuery($query);
+
+		if(!$result)
+			return;
+
+		return mysqli_num_rows($result) > 0;
+	}
+
+	static function GetMessage($messageId)
+	{
+		$query = "CALL GET_MESSAGE('{$messageId}', '{$receiverHandle}')";
+		$result = database::ExecuteQuery($query);
+
+		if(!$result || mysqli_num_rows($result) <= 0)
+			return;
+
+		$row = $result->fetch_array();
+		$message = new accessibleMessage(null, null, $row["message"], $row["message_type"], $row["created_at"], $row["id"]);
+
+		return  $message;
+	}
+
 	static function GetRecentEditedMessages($handle)
 	{
 		if(user::IsHandleExist($handle))

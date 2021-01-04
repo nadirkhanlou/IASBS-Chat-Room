@@ -5,14 +5,10 @@ if(isset($_REQUEST['messageId']))
 {
     $result = array("success" => true, "errorMessage" => "");
 
-    if(true)
-    {
-
-    }
-    else
+    if(!messages::DeleteMessage($_REQUEST['receiverHandle'], $_REQUEST['messageId']))
     {
         $result["success"] = false;
-        $result["errorMessage"] = "";
+        $result["errorMessage"] = "Couldn't delete message";
     }
 
     echo json_encode($result);
