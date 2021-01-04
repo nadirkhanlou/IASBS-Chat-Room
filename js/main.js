@@ -238,8 +238,8 @@ function ShowMessage(message, isUserSender, isDelivered)
                            <span class="message-bubble">${message.Message}</span>
                            <span>
                                <span class="message-date-time">${message.DateTime}</span>
-                               ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}"></i>‌` : ``}
-                               ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}"></i>` : ``}
+                               ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}" title="delete"></i>‌` : ``}
+                               ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}" title="edit"></i>` : ``}
                                <i class="fas fa-pencil-alt${message.MessageId}"></i>
                            </span>
                        </div>
@@ -251,13 +251,18 @@ function ShowMessage(message, isUserSender, isDelivered)
 function LoadChat(contact)
 {
     let handle = contact["Handle"];
+    let fullName = contact["FullName"];
     let handleSubStr = handle.substr(1, handle.length - 1);
     $(".chat-window-wrapper#chat-window-empty").clone(true).appendTo(".right-side-wrapper");
     let newChatWrapper = $(".chat-window-wrapper:last-child");
     newChatWrapper.attr("id","chat-window-" + handleSubStr);
     newChatWrapper.hide();
     //newChatWrapper.find(".chat-window-input input").attr('id', handleSubStr);
-    newChatWrapper.find('.chat-window-header p').html(handle);
+    newChatWrapper.find('.chat-window-header').html(
+        `<span class="chat-window-contact-full-name">${fullName}</span>
+        <span class="chat-window-contact-handle">${handle}</span>
+        <span><i title="block" class="fas fa-ban fa-1x" id="chat-user-block" title="block"></i></span>`
+    );
     newChatWrapper.find('.chat-window-header i').attr('id', handleSubStr); //block
     newChatWrapper.find(".chat-window-input button").attr('id', handleSubStr);
     $.ajax({
