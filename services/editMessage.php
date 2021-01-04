@@ -5,7 +5,7 @@ if(isset($_REQUEST['messageId']))
 {
     $result = array("success" => true, "errorMessage" => "");
 
-    if(!messages::DeleteMessage($_REQUEST['receiverHandle'], $_REQUEST['messageId'], $_REQUEST['message']))
+    if(!message::EditMessage($_REQUEST['receiverHandle'], $_REQUEST['messageId'], $_REQUEST['message']))
     {
         $result["success"] = false;
         $result["errorMessage"] = "Couldn't edit message";

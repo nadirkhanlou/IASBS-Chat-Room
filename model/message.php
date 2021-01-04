@@ -163,7 +163,7 @@ class message
 		if(user::IsHandleExist($receiverHandle) && message::IsMessageExist($messageId))
 		{
 
-			$query = "CALL EDITMESSAGE('{$messageId}', '{$message}', '{$receiverHandle}'";
+			$query = "CALL EDITMESSAGE('{$messageId}', '{$message}', '{$receiverHandle}')";
 			$result = database::ExecuteQuery($query);
 
 			return $result;

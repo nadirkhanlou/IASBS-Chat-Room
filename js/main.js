@@ -87,7 +87,7 @@ $(function() {
 
         if(IsEditing){
             IsEditing = false;
-            $(`.chat-window-body #${EditingMessageId} message-bubble`).html("");
+            $(`.chat-window-body #${EditingMessageId} .message-bubble`).html("");
         }
 
         if(contactHandle.charAt(0) == '@') {
@@ -179,12 +179,12 @@ $(function() {
                 url: 'services/editMessage.php',
                 type: 'POST',
                 async: !1,
-                data: {'receiverHandle': receiverHandle, 'messageText': messageText, 'messageId': EditingMessageId},
+                data: {'receiverHandle': receiverHandle, 'message': messageText, 'messageId': EditingMessageId},
                 success: function (resultString) {
                     let result = JSON.parse(resultString);
                     if(result["success"])
                     {
-                        $(`.chat-window-body #${messageId} message-bubble`).html(messageText);
+                        $(`.chat-window-body #${messageId} .message-bubble`).html(messageText);
                         IsEditing = false;
                         $('#chat-window-' + handleSubStr + ' .chat-window-input input').val("");
                     }
@@ -414,7 +414,7 @@ function GetAndEditMessage(messageId) {
             let result = JSON.parse(resultString);
             if(result["success"])
             {
-                $(`.chat-window-body #${messageId} message-bubble`).html(result['message'].Message);
+                $(`.chat-window-body #${messageId} .message-bubble`).html(result['message'].Message);
             }
             else
             {
@@ -429,11 +429,11 @@ function GetAndEditMessage(messageId) {
 }
 
 function EditMessage(receiverHandleSubStr, className) {
-    console.log('hey');
     classNames = className.split(' ');
     messageId = classNames[classNames.length - 1];
-    message = $(`.chat-window-body #${messageId} message-bubble`).html();
-    $(`.chat-window-wrapper #chat-window-${receiverHandleSubStr} #chat-window-input input`).val(message);
+    
+    message = $(`.chat-window-body #${messageId} .message-bubble`).html();
+    $(`#chat-window-${receiverHandleSubStr} .chat-window-input input`).val(message);
     IsEditing = true;
     EditingMessageId = messageId;
 }
@@ -517,13 +517,13 @@ function GetEditedList() {
             {
                 editedList = result["editedList"];
                 for(let i = 0; i < editedList.length; ++i) {
-                    if(editedList[i].EditType = 'delete')
+                    if(editedList[i].EditType == 'delete')
                     {
                         $(`.chat-window-body #${editedList[i].MessageId}`).remove();
                     }
-                    else if(editedList[i].EditType = 'edit')
+                    else if(editedList[i].EditType == 'edit')
                     {
-                        GetAndEditMessage();
+                        GetAndEditMessage(editedList[i].MessageId);
                     }
                 }
             }

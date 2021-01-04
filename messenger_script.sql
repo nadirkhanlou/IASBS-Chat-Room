@@ -421,7 +421,7 @@ DROP PROCEDURE EDITMESSAGE
 
 DELIMITER $$
 
-CREATE PROCEDURE EDITMESSAGE(IN id INT, IN MSG LONGTEXT, IN receiverHandle NVARCHAR(255))
+CREATE PROCEDURE EDITMESSAGE(IN id INT, IN MSG LONGTEXT, IN receiverHandle NVARCHAR(250))
 BEGIN
 	UPDATE messages SET state = '3', message = MSG, updated_at = NOW() WHERE messages.id = id;
 	IF exists (SELECT * FROM messagesRecentlyEditedList WHERE id = messageId)
