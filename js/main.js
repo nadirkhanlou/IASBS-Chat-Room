@@ -78,8 +78,8 @@ $(function() {
         });
     });
 
-    $('.user-contacts-list').on('click', 'li span:first-of-type', function() {
-        let contactHandle = $(this).html();
+    $('.user-contacts-list').on('click', 'li', function() {
+        let contactHandle = $(this).find('span:first-of-type').html();
 
         if(contactHandle.charAt(0) == '@') {
             contactHandleSubStr = contactHandle.substr(1, contactHandle.length - 1);
@@ -88,7 +88,7 @@ $(function() {
         }
         else
         {
-            contactHandleSubStr = $(this).parent().attr('id');
+            contactHandleSubStr = $(this).attr('id');
 
             $.ajax({
                 url: 'services/unblockUser.php',
@@ -205,6 +205,8 @@ $(function() {
                 let result = JSON.parse(resultString);
                 if(result["success"])
                 {
+                    $(`#chat-window-empty`).show();
+                    $(`#chat-window-${handleSubStr}`).hide();
                     $(`.user-contacts-list #${handleSubStr}`).attr('class', 'contact-blocked');
                     $(`.user-contacts-list #${handleSubStr} span:first-child`).remove();
                 }
