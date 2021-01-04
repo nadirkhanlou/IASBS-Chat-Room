@@ -5,7 +5,7 @@ if(isset($_REQUEST['messageId']))
 {
     $result = array("success" => true, "errorMessage" => "");
 
-    if(!messages::DeleteMessage($_REQUEST['receiverHandle'], $_REQUEST['messageId']))
+    if(!message::DeleteMessage($_REQUEST['receiverHandle'], $_REQUEST['messageId']))
     {
         $result["success"] = false;
         $result["errorMessage"] = "Couldn't delete message";

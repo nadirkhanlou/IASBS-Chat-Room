@@ -5,7 +5,7 @@
             <br/>
             <span id="user-info-full-name"></span>
         </div>
-        <div class="buttons" style="float: right">
+        <div class="user-overview-buttons" style="float: right">
             <i title="sign out" class="fas fa-sign-out-alt fa-2x" id="user-overview-logout-button" style="float: right"></i>
             <i title="edit info" class="fas fa-edit fa-2x" id="user-overview-settings-button" style="float: right"></i>
         </div>
@@ -35,20 +35,23 @@
 </div>
 <div class="right-side-wrapper">
     <div class="chat-window-wrapper" id="chat-window-empty">
-        <div class="chat-window-header">
-            <p style="float: left">This is where the recepient's info is shown</p>
-            <i title="block" class="fas fa-ban fa-2x" id="chat-user-block" style="float: right"></i>
-        </div>
+        <div class="chat-window-header"></div>
         <div class="chat-window-body">
             <div class="chat-window-initial-message">
                 <i class="far fa-comments fa-4x"></i>
                 <p>Choose one of your contacts and start chatting!</p>
             </div>
+            <div class="chat-window-no-history" style="display: none;">
+                <i class="far fa-comments fa-4x"></i>
+                <p>You do not have a chat history with this contact yet.</p>
+            </div>
         </div>
         <div class="chat-window-input">
             <form>
-                <input type="text" placeholder="type a message">
-                <button type="button" id="chat-send-button">send</button>
+                <div>
+                    <input type="text" placeholder="type a message">
+                    <button type="button" id="chat-send-button">send</button>
+                </div>
             </form>
         </div>
     </div>

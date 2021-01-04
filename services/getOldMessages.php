@@ -15,7 +15,7 @@ if(isset($_REQUEST['contactHandle']))
         $receivedMessages = message::GetOldMessages($handle, $contactHandle);
         $sentMessages = message::GetOldMessages($contactHandle, $handle);
         $undeliveredMessages = message::GetUnDeliveredMessages($handle, $contactHandle);
-        if($receivedMessages || $sentMessages)
+        if($receivedMessages || $sentMessages || $undeliveredMessages)
         {
             $messages = array("receivedMessages" => $receivedMessages, "sentMessages" => $sentMessages, "undeliveredMessages" => $undeliveredMessages);
             $result['messages'] = $messages;
