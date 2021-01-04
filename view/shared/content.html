@@ -19,9 +19,10 @@
     <div class="user-settings-wrapper">
         <form class="user-settings-form">
             <br/><label>full name</label><br/>
-            <input type="text" id="full-name" onblur="ValidateNameInput(this)" placeholder="full name" value="<?php echo $fullName; ?>"/>
+            <input type="text" id="user-settings-full-name" onblur="ValidateNameInput(this)" placeholder="full name" value="<?php echo $fullName; ?>"/>
             <br/><label>handle</label><br/>
-            <input type="text" id="handle" onkeyup="CheckHandleAvailability(this)" placeholder="@handle" value="<?php echo $handle; ?>"/>
+            <input type="text" id="user-settings-handle" onkeyup="CheckHandleAvailability(this)" placeholder="@handle" value="<?php echo $handle; ?>"/>
+            <p class="error-message" id="user-settings-handle-availability-message" style="display: none;"></p>
             <br/><label>phone number</label><br/>
             <input type="text" id="phone-number" value="<?php echo $phoneNumber; ?>" disabled/>
             <br/><label>current password</label><br/>
