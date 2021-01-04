@@ -184,6 +184,19 @@ class message
 		return false;
 	}
 
+	static function DeleteNewMessage($receiverHandle, $messageId)
+	{
+		if(user::IsHandleExist($receiverHandle) && message::IsMessageExist($messageId))
+		{
+
+			$query = "CALL DELETE_NEW_MESSAGE('{$messageId}', '{$receiverHandle}')";
+			$result = database::ExecuteQuery($query);
+
+			return $result;
+		}
+		return false;
+	}
+
 	static function IsMessageExist($messageId)
 	{
 		$query = "CALL GET_MESSAGE('{$messageId}')";

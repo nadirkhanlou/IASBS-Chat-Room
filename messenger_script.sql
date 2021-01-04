@@ -184,13 +184,7 @@ CREATE TABLE IF NOT EXISTS `messagesRecentlyEditedList` (
     `receiverHandle` nvarchar(250) NOT NULL,
     `edit_type` ENUM('edit', 'delete') NOT NULL,
     `new_messages` LONGTEXT,
-    PRIMARY KEY (`messageId`),
-	CONSTRAINT `fk_messageId_message`
-    FOREIGN KEY (`messageId`)
-    REFERENCES `messages` (`id`),
-	CONSTRAINT `fk_receiverHandle_user`
-    FOREIGN KEY (`receiverHandle`)
-    REFERENCES `users` (`handle`))
+    PRIMARY KEY (`messageId`))
     ENGINE = InnoDB;
 
 SHOW WARNINGS;
@@ -387,7 +381,7 @@ BEGIN
     SET @participants_id = (SELECT id FROM users WHERE CONTACT_HANDLE = users.handle);
     
 	SELECT message, message_type as messageType, created_at as messageDateTime, NEW_MESSAGES.id as messageId FROM
-    NEW_MESSAGES WHERE (reciever_id = @participants_id && sender_id = @user_id);
+    NEW_MESSAGES WHERE (reciever_id = @participants_id && sender_id = @user_id && state != '2');
     
 END $$
 
@@ -400,20 +394,38 @@ DROP PROCEDURE DELETEMESSAGE
 
 DELIMITER $$
 
-CREATE PROCEDURE DELETEMESSAGE(IN id INT, IN receiverHandle nvarchar(255))
+CREATE PROCEDURE DELETEMESSAGE(IN id INT, IN receiverHandle nvarchar(250))
 BEGIN
-	UPDATE messages SET state = '2', deleted_at = NOW() WHERE messages.id = id;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
-	IF exists (SELECT * FROM messagesRecentlyEditedList WHERE id = messageId)
-	THEN
-		UPDATE messagesRecentlyEditedList SET edit_type = 'delete' WHERE messages.id = id;
-	ELSE
-		INSERT INTO messagesRecentlyEditedList (messageId, receiverHandle, edit_type)
-        VALUES (id, receiverHandle, 'delete');
-	END IF;
+		UPDATE messages SET state = '2', deleted_at = NOW() WHERE messages.id = id;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
+		IF exists (SELECT * FROM messagesRecentlyEditedList WHERE id = messageId)
+		THEN
+			UPDATE messagesRecentlyEditedList SET edit_type = 'delete' WHERE messages.id = id;
+		ELSE
+			INSERT INTO messagesRecentlyEditedList (messageId, receiverHandle, edit_type)
+			VALUES (id, receiverHandle, 'delete');
+		END IF;
 END $$
 
 DELIMITER ;
 
+
+DROP PROCEDURE DELETE_NEW_MESSAGE
+
+DELIMITER $$
+
+CREATE PROCEDURE DELETE_NEW_MESSAGE(IN id INT, IN receiverHandle nvarchar(250))
+BEGIN
+		UPDATE new_messages SET state = '2', deleted_at = NOW() WHERE new_messages.id = id;   #inja 2 be manaye vaziate hazf shode ast va 3 ke dar edame khahim did be manaye edit shode ast
+		IF exists (SELECT * FROM messagesRecentlyEditedList WHERE id = messageId)
+		THEN
+			UPDATE messagesRecentlyEditedList SET edit_type = 'delete' WHERE new_messages.id = id;
+		ELSE
+			INSERT INTO messagesRecentlyEditedList (messageId, receiverHandle, edit_type)
+			VALUES (id, receiverHandle, 'delete');
+		END IF;
+END $$
+
+DELIMITER ;
 
 -------------------------------------------------------------------------------------------
 
