@@ -18,7 +18,7 @@ div {
 }
 .user-overview {
     display: flex;
-    background-color: #555;
+    background-color: #565656;
     align-items: center;
     border-bottom: 1px solid black;
     overflow: hidden;
@@ -43,7 +43,7 @@ div {
     font-size: 1.2em;
     font-style: italic;
     margin: 0 10px;
-    color: #b1b1b1;
+    color: #bebebe;
 }
 .user-overview-buttons {
     display: flex;
@@ -55,9 +55,10 @@ div {
 
 .user-overview-buttons i:hover {
     cursor: pointer;
+    color: #720671;
 }
 .user-contacts-wrapper {
-    background: #2c2c2c;
+    background: #313131;;
     flex-grow: 1;
 }
 .user-contacts-search-bar {
@@ -71,7 +72,7 @@ div {
     border: 0;
     padding: 0 15px;
     border-bottom: 1px solid black;
-    background: #f2f2f2;
+    background: #bebebe;
 }
 .user-contacts-list {
     height: 95%;
@@ -87,7 +88,7 @@ div {
     border-bottom: 1px solid black;
 }
 .user-contacts-list li:hover {
-    background: #555;
+    background: #8f0c8e;
     cursor: pointer;
     color: #FFFFFF;
 }
@@ -98,7 +99,7 @@ div {
 .user-contacts-list li span:last-of-type {
     font-size: 1em;
     font-style: italic;
-    color: #b0b0b0;
+    color: #bebebe;
     margin-left: 10px;
 }
 .user-contacts-list li.contact-blocked {
@@ -111,7 +112,7 @@ div {
     flex-grow: 1;
 }
 .chat-window-header {
-    background-color:#2c2c2c;
+    background-color: #313131;
     text-align: center;
 }
 .chat-window-header span {
@@ -132,7 +133,7 @@ div {
 .chat-window-header .chat-window-contact-handle {
     font-size: 1em;
     font-style: italic;
-    color: #b0b0b0;
+    color: #bebebe;
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -142,13 +143,16 @@ div {
     overflow-x: hidden;
     overflow-y: auto;
     flex-grow: 1;
-    background: rgb(172, 172, 172);
+    background: #ddb6dd;
     
 }
 .chat-window-body div {
     display: block;
     padding: 0;
     margin: 0;
+}
+.chat-window-body div .fa-comments {
+    color: #8f0c8e;
 }
 .chat-window-body div div {
     padding: 10px;
@@ -158,6 +162,7 @@ div {
 }
 .chat-window-body div div span i:hover {
     cursor: pointer;
+    color: #720671;
 }
 .chat-window-body div .sent-message {
     float: right;
@@ -173,19 +178,21 @@ div {
     width: 100%;
 }
 .sent-message .message-bubble {
-    background: #707070;
+    background: #8f0c8e;
+    color: #ffffff;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 .received-message .message-bubble {
-    background: #ffa2a2;
+    background: #565656;
+    color: #ffffff;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 .chat-window-body div .message-date-time {
-    color: #444444;
+    color: #313131;
     font-size: 0.8em;
 }
 .chat-window-initial-message {
@@ -197,7 +204,7 @@ div {
 }
 .chat-window-input {
     height: 50px;
-    background: #555;
+    background: #565656;
 }
 .chat-window-input form div {
     height: 40px;
@@ -213,7 +220,7 @@ div {
     padding: 0 15px;
     border-radius: 25px;
     border-bottom: 1px solid black;
-    background: #f2f2f2;
+    background: #bebebe;
     flex-grow: 1;
 }
 .chat-window-input form div button {
@@ -228,13 +235,13 @@ div {
     cursor: pointer;
 }
 .user-settings-wrapper {
-    background: #2c2c2c;
+    background: #313131;
     flex-grow: 1;
 }
 .user-settings-form input {
     font-family: "Roboto", sans-serif;
     outline: 0;
-    background: #f2f2f2;
+    background: #cccccc;
     width: 80%;
     border: 0;
     margin: 5px 15px 15px;
@@ -260,7 +267,7 @@ div {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     outline: 0;
-    background: #4CAF50;
+    background: #8f0c8e;
     width: 80%;
     border: 0;
     margin: 0 15px 15px;
@@ -272,5 +279,5 @@ div {
     cursor: pointer;
   }
 .user-settings-form button:hover,.form button:active,.form button:focus {
-    background: #43A047;
+    background: #720671;
 }
