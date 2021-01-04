@@ -288,7 +288,6 @@ UPDATE users SET handle = USERNEW, password = PASS, full_name = FN, updated_at =
 END $$
 DELIMITER ;
 
-CALL EDITPROFILE('WWW','WWW','WWW','WWW','WWW');
 
 ----------------------------------------------------------------------------------------
 
@@ -394,8 +393,6 @@ END $$
 
 DELIMITER ;
 
-CALL SENDMESSAGE('www', 'ddd', 'hello');
-
 ------------------------------------------------------------------------------------------
 
 DROP PROCEDURE DELETEMESSAGE
@@ -416,7 +413,6 @@ END $$
 
 DELIMITER ;
 
-CALL DELETEMESSAGE(1);
 
 -------------------------------------------------------------------------------------------
 
@@ -438,7 +434,6 @@ END $$
 
 DELIMITER ;
 
-CALL EDITMESSAGE( 1 , 'HI');
 -------------------------------------------------------------------------------------------
 DELIMITER $$
 
@@ -448,8 +443,6 @@ SELECT * FROM messages WHERE sender_id = FROMUSER AND reciever_id = TOUSER;
 END $$
 
 DELIMITER ;
-
-CALL GETHISTORY('www', 'ddd');
 
 -------------------------------------------------------------------------------------------
 
