@@ -97,6 +97,47 @@ div {
 }
 .chat-window-body {
     height: 86%;
+    display: flex;
+    flex-direction: column;
+}
+.chat-window-body div {
+    display: block;
+    padding: 0;
+    margin: 0;
+}
+.chat-window-body div div {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.chat-window-body div .sent-message {
+    float: right;
+}
+.chat-window-body div .received-message {
+    float: left;
+    align-items: flex-end;
+}
+.chat-window-body div span {
+    padding: 8px;
+}
+.chat-window-body div .message-bubble {
+    width: 100%;
+}
+.sent-message .message-bubble {
+    background: #707070;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.received-message .message-bubble {
+    background: #ffa2a2;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.chat-window-body div .message-date-time {
+    color: #444444;
+    font-size: 0.8em;
 }
 .chat-window-initial-message {
     position: relative;
