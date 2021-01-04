@@ -10,7 +10,8 @@ if(isset($_SESSION["USER"]))
     $user = new user(null, $handle, null, null);
     $contacts = $user->GetContacts();
     $blocked = $user->GetBlockedList();
-    $users = array("contacts" => $contacts, "blocked" => $blocked);
+    $blockedBy = $user->GetBlockedByList();
+    $users = array("contacts" => $contacts, "blocked" => $blocked, "blockedBy" => $blockedBy);
     $result["users"] = $users;
 }
 else

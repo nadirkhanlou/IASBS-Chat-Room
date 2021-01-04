@@ -369,7 +369,7 @@ function GetNewMessages() {
         async: !1,
         data: {},
         success: function (resultString) {
-            result = JSON.parse(resultString);
+            let result = JSON.parse(resultString);
             if(result["success"])
             {
                 let messages = result["messages"];
@@ -435,29 +435,35 @@ function UpdateContacts()
 
                 let contacts = result["users"]["contacts"];
                 let blocked = result["users"]["blocked"];
+                let blockedBy = result["users"]["blockedBy"];
 
                 let contactsListHTML = "";
                 for(let i = 0; i < contacts.length; ++i)
                 {
-                    //$(selector).length 
-                    if (false) {
-                        let handleSubStr = contacts[i]['Handle'];
+                    let handleSubStr = contacts[i]['Handle'];
                         handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
-
+                    if ($(`.user-contacts-list #${handleSubStr}`).length <= 0) {
                         contactsListHTML += `<li id="${handleSubStr}"><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
                         LoadChat(contacts[i]);
                     }
-                    
                 }
                 for(let i = 0; i < blocked.length; ++i)
                 {
-                    if (false) {
-                        let handleSubStr = blocked[i]['Handle'];
-                        handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
-
+                    let handleSubStr = blocked[i]['Handle'];
+                    handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
+                    if ($(`.user-contacts-list #${handleSubStr}`).length <= 0) {
                         contactsListHTML += `<li class="contact-blocked" id="${handleSubStr}"></span><span>${blocked[i]['FullName']}</span></li>\n`;
                         LoadChat(blocked[i]);
                     }
+                }
+                for(let i = 0; i < blockedBy.length; ++i)
+                {
+                    let handleSubStr = blockedBy[i]['Handle'];
+                    handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
+                    if ($(`.user-contacts-list #${handleSubStr}`).length > 0) {
+                        $(`.user-contacts-list #${handleSubStr}`).remove();
+                    }
+                    
                 }
                 $('.user-contacts-list').append(contactsListHTML);
 

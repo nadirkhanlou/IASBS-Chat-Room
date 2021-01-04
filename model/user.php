@@ -142,6 +142,20 @@ class user
 		}
 		return $retVal;
 	}
+
+	function GetBlockedByList()
+	{
+		$query = "CALL GET_BLOCKED_BY('{$this->handle}')";
+		$result = database::ExecuteQuery($query);
+		$rows = $result->fetch_all(MYSQLI_ASSOC);
+		$retVal = [];
+		for ($i = 0; $i < count($rows); ++$i) {
+			$user = new user($rows[$i]['full_name'], $rows[$i]['handle'], $rows[$i]['phone'], "");
+			$contact = new accessibleUser($user);
+			array_push($retVal, $contact);
+		}
+		return $retVal;
+	}
 	
 	function SendMessage($receiverHandle, $messageText)
 	{

@@ -238,8 +238,10 @@ CREATE PROCEDURE GET_CONTACTS
 BEGIN
 	SET @userId = (SELECT id FROM users WHERE HANDLE = users.handle);
 SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE
-    HANDLE != users.handle && users.id NOT IN
-    (SELECT block_list.participants_id FROM block_list WHERE users_id = @userId);
+    HANDLE != users.handle && (users.id NOT IN
+    (SELECT block_list.participants_id FROM block_list WHERE users_id = @userId))
+    && (users.id NOT IN
+    (SELECT block_list.users_id FROM block_list WHERE participants_id = @userId));
 END$$
 
 ----------------------------------------------------------------------------------------
@@ -473,3 +475,16 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+drop PROCEDURE GET_BLOCKED_BY
+
+DELIMITER $$
+CREATE PROCEDURE GET_BLOCKED_BY
+(
+    IN HANDLE NVARCHAR(250))
+BEGIN
+	SET @userId = (SELECT id FROM users WHERE HANDLE = users.handle);
+	SELECT users.full_name, users.phone, users.handle, users.id FROM users WHERE
+    HANDLE != users.handle && users.id IN
+    (SELECT block_list.users_id FROM block_list WHERE participants_id = @userId);
+END$$
