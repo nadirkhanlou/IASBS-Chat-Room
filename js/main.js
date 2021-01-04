@@ -1,3 +1,7 @@
+
+var IsEditing = false;
+var EditingMessageId = 0;
+
 $(function() {
     $('.user-settings-wrapper').hide();
     $('#user-overview-settings-button').on('click', function() {
@@ -81,6 +85,11 @@ $(function() {
     $('.user-contacts-list').on('click', 'li', function() {
         let contactHandle = $(this).find('span:first-of-type').html();
 
+        if(IsEditing){
+            IsEditing = false;
+            $(`.chat-window-body #${EditingMessageId} message-bubble`).html("");
+        }
+
         if(contactHandle.charAt(0) == '@') {
             contactHandleSubStr = contactHandle.substr(1, contactHandle.length - 1);
             $(".chat-window-wrapper").hide();
@@ -160,74 +169,68 @@ $(function() {
         handleSubStr = $(this).attr('id');
 
         let receiverHandle = "@" + handleSubStr;
+
         let messageText = $('#chat-window-' + handleSubStr + ' .chat-window-input input').val();
 
-        $.ajax({
-            url: 'services/sendMessage.php',
-            type: 'POST',
-            async: !1,
-            data: {'receiverHandle': receiverHandle, 'messageText': messageText},
-            success: function (resultString) {
-                let result = JSON.parse(resultString);
-                if(result["success"])
-                {
-                    let message = result["message"];
-                    let chatWrapper = $('#chat-window-' + handleSubStr);
-                    let msgHTML = "";
-                    msgHTML += ShowMessage(message, true, false);
-                    chatWrapper.find(".chat-window-body").append(msgHTML);
-                    $('#chat-window-' + handleSubStr + ' .chat-window-input input').val("");
+
+        if(IsEditing)
+        {
+            $.ajax({
+                url: 'services/editMessage.php',
+                type: 'POST',
+                async: !1,
+                data: {'receiverHandle': receiverHandle, 'messageText': messageText, 'messageId': EditingMessageId},
+                success: function (resultString) {
+                    let result = JSON.parse(resultString);
+                    if(result["success"])
+                    {
+                        $(`.chat-window-body #${messageId} message-bubble`).html(messageText);
+                        IsEditing = false;
+                        $('#chat-window-' + handleSubStr + ' .chat-window-input input').val("");
+                    }
+                    else
+                    {
+                        console.log(result["errorMessage"]);
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    console.log("Status: " + textStatus);
+                    console.log("Error: " + errorThrown); 
                 }
-                else
-                {
-                    console.log(result["errorMessage"]);
+            });
+        }
+        else
+        {
+
+            $.ajax({
+                url: 'services/sendMessage.php',
+                type: 'POST',
+                async: !1,
+                data: {'receiverHandle': receiverHandle, 'messageText': messageText},
+                success: function (resultString) {
+                    let result = JSON.parse(resultString);
+                    if(result["success"])
+                    {
+                        let message = result["message"];
+                        let chatWrapper = $('#chat-window-' + handleSubStr);
+                        let msgHTML = "";
+                        msgHTML += ShowMessage(message, true, false);
+                        chatWrapper.find(".chat-window-body").append(msgHTML);
+                        $('#chat-window-' + handleSubStr + ' .chat-window-input input').val("");
+                    }
+                    else
+                    {
+                        console.log(result["errorMessage"]);
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    console.log("Status: " + textStatus);
+                    console.log("Error: " + errorThrown); 
                 }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                console.log("Status: " + textStatus);
-                console.log("Error: " + errorThrown); 
-            }
-        });
-    });
-
-    $('.right-side-wrapper').ready(function() {
+            });
+        }
 
     });
-
-    $(".message-container i:first-of-type").on('click', function() {
-        receiverHandleSubstr = $(this).attr('id');
-        messageId = $(this).attr('class')
-        console.log(receiverHandleSubstr);
-        console.log(messageId);
-        // $.ajax({
-        //     url: 'services/deleteMessage.php',
-        //     type: 'POST',
-        //     async: !1,
-        //     data: {'contactHandle': '@' + handleSubStr, 'receiverHandle': '@' + receiverHandleSubstr},
-        //     success: function (resultString) {
-        //         let result = JSON.parse(resultString);
-        //         if(result["success"])
-        //         {
-        //             $(`#chat-window-empty`).show();
-        //             $(`#chat-window-${handleSubStr}`).hide();
-        //             $(`.user-contacts-list #${handleSubStr}`).attr('class', 'contact-blocked');
-        //             $(`.user-contacts-list #${handleSubStr} span:first-child`).remove();
-        //         }
-        //         else
-        //         {
-        //             console.log(result["errorMessage"]);
-        //         }
-        //     },
-        //     error: function(XMLHttpRequest, textStatus, errorThrown) { 
-        //         console.log("Status: " + textStatus);
-        //         console.log("Error: " + errorThrown); 
-        //     }
-        // });
-    })
-
-    $(".edit-sent-message").on('click', function() {
-        
-    })
 });
 
 function ShowMessage(message, isUserSender, isDelivered)
@@ -249,7 +252,7 @@ function ShowMessage(message, isUserSender, isDelivered)
                            <span class="message-container">
                                <span class="message-date-time">${message.DateTime}</span>
                                ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}" title="delete" id="${receiverHandle}" onclick="DeleteMessage(this.id, this.className)"></i>‌` : ``}
-                               ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}" title="edit id="${receiverHandle}" onclick="EditMessage(this.id, this.className)></i>` : ``}
+                               ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}" title="edit" id="${receiverHandle}" onclick="EditMessage(this.id, this.className)></i>` : ``}
                                <i class="fas fa-pencil-alt ${message.MessageId}"></i>
                                ${isDelivered ? `<i class="fas fa-check-double"></i>` : `<i class="fas fa-check"></i>`}
                            </span>
@@ -426,36 +429,14 @@ function GetAndEditMessage(messageId) {
     });
 }
 
-function SendEditingMessage() {
-    $.ajax({
-        url: 'services/editMessage.php',
-        type: 'POST',
-        async: !1,
-        data: {'messageId': messageId, 'receiverHandle': '@' + receiverHandleSubStr, 'message': message},
-        success: function (resultString) {
-            let result = JSON.parse(resultString);
-            if(result["success"])
-            {
-                $(`.chat-window-body #${messageId} message-bubble`).html(message);
-            }
-            else
-            {
-                console.log(result["errorMessage"]);
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) { 
-            console.log("Status: " + textStatus);
-            console.log("Error: " + errorThrown); 
-        }
-    });
-}
-
 function EditMessage(receiverHandleSubStr, className) {
+    console.log('hey');
     classNames = className.split(' ');
     messageId = classNames[classNames.length - 1];
     message = $(`.chat-window-body #${messageId} message-bubble`).html();
     $(`.chat-window-wrapper #chat-window-${receiverHandleSubStr} #chat-window-input input`).val(message);
-
+    IsEditing = true;
+    EditingMessageId = messageId;
 }
 
 function ShowUserInfo() {
@@ -539,12 +520,11 @@ function GetEditedList() {
                 for(let i = 0; i < editedList.length; ++i) {
                     if(editedList[i].EditType = 'delete')
                     {
-                        console.log(editedList[i].MessageId);
                         $(`.chat-window-body #${editedList[i].MessageId}`).remove();
                     }
-                    else 
+                    else if(editedList[i].EditType = 'edit')
                     {
-
+                        GetAndEditMessage();
                     }
                 }
             }
