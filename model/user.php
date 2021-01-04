@@ -161,6 +161,19 @@ class user
 		}
 		return false;
 	}
+
+	function unblockUser($contactHandle)
+	{
+		if(user::IsHandleExist($this->handle) && user::IsHandleExist($contactHandle))
+		{
+
+			$query = "CALL UNBLOCK_USER('{$this->handle}', '{$contactHandle}')";
+			$result = database::ExecuteQuery($query);
+
+			return $result;
+		}
+		return false;
+	}
 }
 
 ?>

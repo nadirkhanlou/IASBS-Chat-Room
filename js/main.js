@@ -45,13 +45,19 @@ $(function() {
                     let contactsListHTML = "";
                     for(let i = 0; i < contacts.length; ++i)
                     {
-                        contactsListHTML += `<li><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
+                        let handleSubStr = contacts[i]['Handle'];
+                        handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
+
+                        contactsListHTML += `<li id="${handleSubStr}"><span>${contacts[i]['Handle']}</span><span>${contacts[i]['FullName']}</span></li>\n`;
                         LoadChat(contacts[i]);
                         
                     }
                     for(let i = 0; i < blocked.length; ++i)
                     {
-                        contactsListHTML += `<li class="contact-blocked"><span>${blocked[i]['Handle']}</span><span>${blocked[i]['FullName']}</span></li>\n`;
+                        let handleSubStr = blocked[i]['Handle'];
+                        handleSubStr = handleSubStr.substr(1, handleSubStr.length - 1);
+
+                        contactsListHTML += `<li class="contact-blocked" id="${handleSubStr}"></span><span>${blocked[i]['FullName']}</span></li>\n`;
                     }
                     $('.user-contacts-list').html(contactsListHTML);
 
@@ -71,11 +77,42 @@ $(function() {
 
     $('.user-contacts-list').on('click', 'li span:first-of-type', function() {
         let contactHandle = $(this).html();
-        contactHandleSubStr = contactHandle.substr(1, contactHandle.length - 1);
-        $('.chat-window-header').html(contactHandle);
-        
-        $(".chat-window-wrapper").hide();
-        $(".chat-window-wrapper#chat-window-" + contactHandleSubStr).show();
+
+        if(contactHandle.charAt(0) == '@') {
+            contactHandleSubStr = contactHandle.substr(1, contactHandle.length - 1);
+            $(".chat-window-wrapper").hide();
+            $(".chat-window-wrapper#chat-window-" + contactHandleSubStr).show();
+        }
+        else
+        {
+            contactHandleSubStr = $(this).parent().attr('id');
+
+            $.ajax({
+                url: 'services/unblockUser.php',
+                type: 'POST',
+                async: !1,
+                data: {'contactHandle': '@' + contactHandleSubStr},
+                success: function (resultString) {
+                    let result = JSON.parse(resultString);
+                    if(result["success"])
+                    {
+                        $(`.user-contacts-list #${contactHandleSubStr}`).attr('class', '');
+                        contactItemHtml = $(`.user-contacts-list #${contactHandleSubStr}`).html();
+                        contactItemHtml = `<span>@${contactHandleSubStr}</span>` + contactItemHtml;
+                        $(`.user-contacts-list #${contactHandleSubStr}`).html(contactItemHtml)
+                    }
+                    else
+                    {
+                        console.log(result["errorMessage"]);
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    console.log("Status: " + textStatus);
+                    console.log("Error: " + errorThrown); 
+                }
+            });
+
+        }
         
     });
 
@@ -153,6 +190,32 @@ $(function() {
     $('.right-side-wrapper').ready(function() {
 
     });
+
+    $('.chat-window-header i').on('click', function () { //block
+        handleSubStr = $(this).attr('id');
+        $.ajax({
+            url: 'services/blockUser.php',
+            type: 'POST',
+            async: !1,
+            data: {'contactHandle': '@' + handleSubStr},
+            success: function (resultString) {
+                let result = JSON.parse(resultString);
+                if(result["success"])
+                {
+                    $(`.user-contacts-list #${handleSubStr}`).attr('class', 'contact-blocked');
+                    $(`.user-contacts-list #${handleSubStr} span:first-child`).remove();
+                }
+                else
+                {
+                    console.log(result["errorMessage"]);
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                console.log("Status: " + textStatus);
+                console.log("Error: " + errorThrown); 
+            }
+        });
+    });
 });
 
 function ShowMessage(message, isUserSender, isDelivered)
@@ -173,6 +236,8 @@ function LoadChat(contact)
     newChatWrapper.attr("id","chat-window-" + handleSubStr);
     newChatWrapper.hide();
     //newChatWrapper.find(".chat-window-input input").attr('id', handleSubStr);
+    newChatWrapper.find('.chat-window-header p').html(handle);
+    newChatWrapper.find('.chat-window-header i').attr('id', handleSubStr); //block
     newChatWrapper.find(".chat-window-input button").attr('id', handleSubStr);
     $.ajax({
         url: 'services/getOldMessages.php',
@@ -320,7 +385,7 @@ function GetEditedList() {
         async: !1,
         data: {},
         success: function (resultString) {
-            result = JSON.parse(resultString);
+            let result = JSON.parse(resultString);
             if(result["success"])
             {
 

@@ -309,7 +309,23 @@ END$$
 
 DELIMITER ;
 
-CALL BLOCKUSER('WWW', 'DOD');
+drop PROCEDURE UNBLOCK_USER
+
+DELIMITER $$
+CREATE PROCEDURE UNBLOCK_USER
+	(
+    IN HANDLE NVARCHAR(250),
+    IN TO_BE_UNBLOCKED_HANDLE NVARCHAR(250))
+BEGIN
+	SET @users_id = (SELECT id FROM users WHERE HANDLE = users.handle);
+	SET @participants_id = (SELECT id FROM users WHERE TO_BE_UNBLOCKED_HANDLE = users.handle);
+    IF EXISTS(SELECT * FROM block_list WHERE @users_id = users_id && @participants_id = participants_id)
+    THEN
+		DELETE FROM block_list WHERE @users_id = users_id && @participants_id = participants_id;
+    END IF;
+END$$
+
+DELIMITER ;
 
 ------------------------------------------------------------------------------------------
 
