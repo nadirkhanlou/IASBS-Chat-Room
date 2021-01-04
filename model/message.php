@@ -186,7 +186,7 @@ class message
 
 	static function IsMessageExist($messageId)
 	{
-		$query = "CALL GET_MESSAGE('{$messageId}', '{$receiverHandle}')";
+		$query = "CALL GET_MESSAGE('{$messageId}')";
 		$result = database::ExecuteQuery($query);
 
 		if(!$result)
@@ -197,7 +197,7 @@ class message
 
 	static function GetMessage($messageId)
 	{
-		$query = "CALL GET_MESSAGE('{$messageId}', '{$receiverHandle}')";
+		$query = "CALL GET_MESSAGE('{$messageId}')";
 		$result = database::ExecuteQuery($query);
 
 		if(!$result || mysqli_num_rows($result) <= 0)
@@ -214,7 +214,7 @@ class message
 		if(user::IsHandleExist($handle))
 		{
 
-			$query = "CALL messagesRecentlyEditedList('{$handle}')";
+			$query = "CALL GET_EDITED_LIST('{$handle}')";
 			$result = database::ExecuteQuery($query);
 	
 			if(!$result)

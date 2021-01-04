@@ -221,6 +221,41 @@ $(function() {
             }
         });
     });
+
+    $(".message-container i:first-of-type").on('click', function() {
+        receiverHandleSubstr = $(this).attr('id');
+        messageId = $(this).attr('class')
+        console.log(receiverHandleSubstr);
+        console.log(messageId);
+        // $.ajax({
+        //     url: 'services/deleteMessage.php',
+        //     type: 'POST',
+        //     async: !1,
+        //     data: {'contactHandle': '@' + handleSubStr, 'receiverHandle': '@' + receiverHandleSubstr},
+        //     success: function (resultString) {
+        //         let result = JSON.parse(resultString);
+        //         if(result["success"])
+        //         {
+        //             $(`#chat-window-empty`).show();
+        //             $(`#chat-window-${handleSubStr}`).hide();
+        //             $(`.user-contacts-list #${handleSubStr}`).attr('class', 'contact-blocked');
+        //             $(`.user-contacts-list #${handleSubStr} span:first-child`).remove();
+        //         }
+        //         else
+        //         {
+        //             console.log(result["errorMessage"]);
+        //         }
+        //     },
+        //     error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        //         console.log("Status: " + textStatus);
+        //         console.log("Error: " + errorThrown); 
+        //     }
+        // });
+    })
+
+    $(".edit-sent-message").on('click', function() {
+        
+    })
 });
 
 function ShowMessage(message, isUserSender, isDelivered)
@@ -231,14 +266,17 @@ function ShowMessage(message, isUserSender, isDelivered)
     */
     let divClass = isUserSender ? "\"sent-message\"" : "\"received-message\"";
 
+    let receiverHandle = message.ReceiverHandle;
+    receiverHandle = receiverHandle.substr(1, receiverHandle.length - 1);
+
     messageElement = 
-                   `<div>
+                   `<div id=${message.MessageId}>
                        <div class=${divClass}>
                            <span class="message-id" style="display: none">${message.MessageId}</span>
                            <span class="message-bubble">${message.Message}</span>
-                           <span>
+                           <span class="message-container">
                                <span class="message-date-time">${message.DateTime}</span>
-                               ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}"></i>‌` : ``}
+                               ${isUserSender? `<i class="fas fa-trash-alt ${message.MessageId}" id="${receiverHandle}" onclick="DeleteMessage(this.id, this.className)"></i>‌` : ``}
                                ${isUserSender? `<i class="fas fa-pencil-alt ${message.MessageId}"></i>` : ``}
                                <i class="fas fa-pencil-alt${message.MessageId}"></i>
                            </span>
@@ -283,7 +321,7 @@ function LoadChat(contact)
 
                 for(let i = 0; i < receivedMsg.length + sentMsg.length; ++i) {
                     if(receivedIndex >= receivedMsg.length){
-                        receivedMsgHTML += ShowMessage(sentIndex[sentIndex], true, true);
+                        receivedMsgHTML += ShowMessage(sentMsg[sentIndex], true, true);
                         sentIndex++;
                     }
                     else if(sentIndex >= sentMsg.length)
@@ -333,6 +371,32 @@ function SortByDate(a, b){
     return new Date(a.date) - new Date(b.date);
 }
 
+function DeleteMessage(receiverHandleSubStr, className) {
+    classNames = className.split(' ');
+    messageId = classNames[classNames.length - 1];
+    $.ajax({
+        url: 'services/deleteMessage.php',
+        type: 'POST',
+        async: !1,
+        data: {'messageId': messageId, 'receiverHandle': '@' + receiverHandleSubStr},
+        success: function (resultString) {
+            let result = JSON.parse(resultString);
+            if(result["success"])
+            {
+                $(`.chat-window-body #${messageId}`).remove();
+            }
+            else
+            {
+                console.log(result["errorMessage"]);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown); 
+        }
+    });
+}
+
 function ShowUserInfo() {
     $.ajax({
         url: 'services/getUserInfo.php',
@@ -362,6 +426,7 @@ function ShowUserInfo() {
 
 window.setInterval(function() {
     GetNewMessages();
+    GetEditedList();
 }, 1000);
 
 function GetNewMessages() {
@@ -409,7 +474,18 @@ function GetEditedList() {
             let result = JSON.parse(resultString);
             if(result["success"])
             {
+                editedList = result["editedList"];
+                for(let i = 0; i < editedList.length; ++i) {
+                    if(editedList[i].EditType = 'delete')
+                    {
+                        console.log(editedList[i].MessageId);
+                        $(`.chat-window-body #${editedList[i].MessageId}`).remove();
+                    }
+                    else 
+                    {
 
+                    }
+                }
             }
             else
             {
